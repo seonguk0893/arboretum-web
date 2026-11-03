@@ -1,0 +1,618 @@
+<!doctype html>
+
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title data-i18n="appTitle">세종국립수목원 안내 로봇</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/common.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/lobby.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="lobby-page">
+      <!-- =========================================
+         HEADER
+    ========================================== -->
+
+      <header class="app-header">
+        <div class="brand">
+          <img
+            class="sjna-logo"
+            src="https://www.koagi.or.kr/resources/branch/images/logo/sjna_logo.png"
+            alt="국립세종수목원"
+            data-i18n-alt="logoAlt"
+          />
+        </div>
+
+        <div class="header-status">
+          <div class="mode-status" id="modeStatus">키오스크 모드</div>
+
+          <div class="language-selector">
+            <label for="languageSelect" class="visually-hidden"
+              >언어 선택</label
+            >
+
+            <select id="languageSelect" aria-label="언어 선택">
+              <option value="ko">🇰🇷 한국어</option>
+
+              <option value="en">🇺🇸 English</option>
+
+              <option value="ja">🇯🇵 日本語</option>
+
+              <option value="zh">🇨🇳 中文</option>
+            </select>
+          </div>
+
+          <div class="time" id="currentTime">-</div>
+
+          <button type="button" class="admin-button" id="adminButton">
+            <span class="admin-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                />
+
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </header>
+
+      <!-- =========================================
+          MAIN
+      ========================================== -->
+
+      <main class="lobby-main">
+        <!-- =====================================
+             WELCOME & CHARACTER
+        ====================================== -->
+
+        <section class="welcome-header-area">
+          <div class="welcome">
+            <span class="welcome-label" data-i18n="sejongArboretum"
+              >시설 안내 로봇</span
+            >
+            <h1 data-i18n="hello">안녕하세요!</h1>
+            <br />
+            <h1 data-i18n="help">무엇을 도와드릴까요?</h1>
+          </div>
+
+          <div class="character-area">
+            <!-- 수목원 캐릭터 이미지 (또는 일러스트) -->
+
+            <img
+              src="{{ url_for('static', filename='images/common/character_logo.png') }}"
+              alt="수목원 캐릭터"
+              class="lobby-character-img"
+              data-i18n-alt="characterAlt"
+            />
+          </div>
+        </section>
+
+        <!-- =====================================
+
+             MAIN GRID MENU (3 CARDS)
+
+        ====================================== -->
+
+        <section
+          class="main-grid-menu"
+          aria-label="주요 안내 메뉴"
+          data-i18n-aria="mainMenuAria"
+        >
+          <!-- 1. 시설 안내 (다크 그린 카드) -->
+
+          <button
+            type="button"
+            class="grid-card card-facility-guidance"
+            onclick="location.href = '/lobby/facilities'"
+            aria-label="시설 및 길 안내"
+            data-i18n-aria="lobbyGuideAria"
+          >
+            <div class="card-icon-wrap" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                ></path>
+                <circle cx="12" cy="9" r="2.5"></circle>
+              </svg>
+            </div>
+            <div class="card-text">
+              <strong data-i18n="lobbyGuideTitle">시설 안내 및 길 안내</strong>
+              <p data-i18n="lobbyGuideDesc">
+                화장실 · 카페 · 수유실 · 출입구 등 목적지까지 편리하게 안내해요
+              </p>
+            </div>
+            <span class="card-arrow" aria-hidden="true">→</span>
+          </button>
+
+          <!-- 2. 짐 운반 도움 -->
+
+          <button
+            type="button"
+            class="grid-card card-luggage"
+            onclick="location.href = '/lobby/luggage'"
+          >
+            <div class="card-icon-wrap">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </div>
+
+            <div class="card-text">
+              <strong data-i18n="luggageTitle">짐 운반 도움</strong>
+              <p data-i18n="luggageDesc">교통약자 물품, 적재 · 운반</p>
+            </div>
+          </button>
+
+          <!-- 3. 만족도 조사 (핑크/퍼플 틴트 카드) -->
+
+          <button
+            type="button"
+            class="grid-card card-survey"
+            id="surveyCardButton"
+          >
+            <div class="card-icon-wrap">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                ></polygon>
+              </svg>
+            </div>
+
+            <div class="card-text">
+              <strong data-i18n="surveyTitle">만족도 조사</strong>
+              <p data-i18n="surveyDesc">관람 경험과 의견을 들려주세요</p>
+            </div>
+          </button>
+        </section>
+
+        <!-- =====================================
+
+             VOICE ASSISTANT (BOTTOM BAR)
+
+        ====================================== -->
+
+        <button type="button" class="lobby-voice-bar" data-voice-button>
+          <div class="voice-icon-wrap">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
+              ></path>
+
+              <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+          </div>
+
+          <div class="voice-bar-text">
+            <strong data-i18n="voiceBarTitle">"로봇아, 화장실 어디야?"</strong>
+
+            <small data-i18n="voiceBarDesc">말로 물어보세요 · 음성 지원</small>
+          </div>
+        </button>
+      </main>
+
+      <!-- 공통 음성인식 모달 -->
+      <div id="voiceModal" class="voice-modal" aria-hidden="true">
+        <div class="voice-modal-backdrop" data-voice-close></div>
+
+        <section
+          class="voice-modal-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="voiceModalTitle"
+        >
+          <button
+            type="button"
+            class="voice-modal-close"
+            data-voice-close
+            aria-label="음성 모달 닫기"
+          >
+            ✕
+          </button>
+
+          <h2 id="voiceModalTitle">무엇을 도와드릴까요?</h2>
+          <p id="voiceStatus" aria-live="polite">
+            아래 버튼을 누르고 말씀해 주세요.
+          </p>
+
+          <div class="voice-microphone" id="voiceMicrophone">🎙️</div>
+
+          <button
+            type="button"
+            id="voiceStartButton"
+            class="voice-start-button"
+          >
+            음성인식 시작
+          </button>
+
+          <p class="voice-result-label">인식된 음성</p>
+          <div id="voiceResult" class="voice-result" aria-live="polite">
+            여기에 인식된 문장이 표시됩니다.
+          </div>
+        </section>
+      </div>
+
+      <!-- =========================================
+
+            ADMIN SETTING MODAL
+            (모달 안의 글자는 i18n.js 의 선택자 매핑으로 번역됩니다)
+
+        ========================================== -->
+
+      <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-backdrop"></div>
+
+        <div class="admin-modal-content">
+          <!-- PIN 입력 -->
+
+          <section class="admin-step" id="pinStep">
+            <div class="admin-modal-header">
+              <div>
+                <span class="admin-modal-label">ADMIN SETTING</span>
+
+                <h2>관리자 설정</h2>
+
+                <p>관리자 PIN을 입력해주세요.</p>
+              </div>
+
+              <button
+                type="button"
+                class="admin-modal-close"
+                id="closeAdminModal"
+              >
+                ×
+              </button>
+            </div>
+
+            <!-- PIN 표시 -->
+
+            <div class="pin-display" id="pinDisplay">
+              <span></span>
+
+              <span></span>
+
+              <span></span>
+
+              <span></span>
+            </div>
+
+            <p class="pin-error" id="pinError"></p>
+
+            <!-- 숫자 키패드 -->
+
+            <div class="pin-keypad">
+              <button type="button" data-pin="1">1</button>
+
+              <button type="button" data-pin="2">2</button>
+
+              <button type="button" data-pin="3">3</button>
+
+              <button type="button" data-pin="4">4</button>
+
+              <button type="button" data-pin="5">5</button>
+
+              <button type="button" data-pin="6">6</button>
+
+              <button type="button" data-pin="7">7</button>
+
+              <button type="button" data-pin="8">8</button>
+
+              <button type="button" data-pin="9">9</button>
+
+              <button type="button" class="pin-clear" id="pinClear">
+                지우기
+              </button>
+
+              <button type="button" data-pin="0">0</button>
+
+              <button type="button" class="pin-confirm" id="pinConfirm">
+                확인
+              </button>
+            </div>
+          </section>
+
+          <!-- 모드 선택 -->
+
+          <section class="admin-step" id="modeStep" style="display: none">
+            <div class="admin-modal-header">
+              <div>
+                <span class="admin-modal-label">ROBOT MODE</span>
+
+                <h2>운영 모드 설정</h2>
+
+                <p>안내 로봇의 운영 방식을 선택해주세요.</p>
+              </div>
+
+              <button
+                type="button"
+                class="admin-modal-close"
+                id="closeModeModal"
+              >
+                ×
+              </button>
+            </div>
+
+            <div class="current-mode-box">
+              <span>현재 선택</span>
+
+              <strong id="selectedModeText"> 키오스크 모드 </strong>
+            </div>
+
+            <div class="mode-options">
+              <!-- 키오스크 -->
+
+              <button type="button" class="mode-option" data-mode="kiosk">
+                <div class="mode-option-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="5"
+                      y="3"
+                      width="14"
+                      height="18"
+                      rx="2"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    />
+
+                    <path
+                      d="M8 7H16"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    />
+
+                    <path
+                      d="M8 11H16"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    />
+
+                    <path
+                      d="M10 17H14"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+
+                <div class="mode-option-text">
+                  <strong>키오스크 모드</strong>
+
+                  <span>
+                    화면에서 시설과 행사를 안내하고 위치는 지도와 음성으로
+                    안내합니다.
+                  </span>
+                </div>
+
+                <div class="mode-check">✓</div>
+              </button>
+
+              <!-- 주행 -->
+
+              <button type="button" class="mode-option" data-mode="drive">
+                <div class="mode-option-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="8"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    />
+
+                    <path
+                      d="M12 7V12L15 14"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+
+                <div class="mode-option-text">
+                  <strong>주행 모드</strong>
+
+                  <span>
+                    선택한 목적지까지 로봇이 직접 이동하고 음성으로 안내합니다.
+                  </span>
+                </div>
+
+                <div class="mode-check">✓</div>
+              </button>
+            </div>
+
+            <button type="button" class="mode-save-button" id="modeSaveButton">
+              운영 모드 저장
+            </button>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- 만족도 조사 모달 -->
+    <div
+      class="survey-modal"
+      id="surveyModal"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="surveyModalTitle"
+    >
+      <div class="survey-modal-backdrop" id="surveyBackdrop"></div>
+
+      <div class="survey-modal-content">
+        <button
+          type="button"
+          class="survey-close"
+          id="surveyClose"
+          aria-label="만족도 조사 닫기"
+        >
+          ×
+        </button>
+
+        <span class="survey-eyebrow">YOUR OPINION</span>
+        <h2 id="surveyModalTitle">서비스 이용은 어떠셨나요?</h2>
+        <p class="survey-description">세 가지 질문에 답변해 주세요.</p>
+
+        <form id="surveyForm">
+          <!-- 질문 1 -->
+          <fieldset class="survey-question">
+            <legend>1. 로봇 안내 서비스에 만족하시나요?</legend>
+
+            <div class="survey-rating">
+              <label>
+                <input type="radio" name="satisfaction" value="1" required />
+                <span>★<small>1점</small></span>
+              </label>
+              <label>
+                <input type="radio" name="satisfaction" value="2" />
+                <span>★★<small>2점</small></span>
+              </label>
+              <label>
+                <input type="radio" name="satisfaction" value="3" />
+                <span>★★★<small>3점</small></span>
+              </label>
+              <label>
+                <input type="radio" name="satisfaction" value="4" />
+                <span>★★★★<small>4점</small></span>
+              </label>
+              <label>
+                <input type="radio" name="satisfaction" value="5" />
+                <span>★★★★★<small>5점</small></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- 질문 2 -->
+          <fieldset class="survey-question">
+            <legend>2. 안내 내용이 이해하기 쉬웠나요?</legend>
+
+            <div class="survey-options">
+              <label>
+                <input
+                  type="radio"
+                  name="easyToUnderstand"
+                  value="yes"
+                  required
+                />
+                <span>네</span>
+              </label>
+              <label>
+                <input type="radio" name="easyToUnderstand" value="normal" />
+                <span>보통이에요</span>
+              </label>
+              <label>
+                <input type="radio" name="easyToUnderstand" value="no" />
+                <span>아니요</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- 질문 3 -->
+          <fieldset class="survey-question">
+            <legend>3. 다음에도 이 서비스를 이용하고 싶으신가요?</legend>
+
+            <div class="survey-options">
+              <label>
+                <input type="radio" name="reuse" value="yes" required />
+                <span>네</span>
+              </label>
+              <label>
+                <input type="radio" name="reuse" value="no" />
+                <span>아니요</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <p
+            class="survey-message"
+            id="surveyMessage"
+            role="status"
+            aria-live="polite"
+          ></p>
+
+          <button type="submit" class="survey-submit">답변 제출하기</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lobby.js') }}"></script>
+  </body>
+</html>

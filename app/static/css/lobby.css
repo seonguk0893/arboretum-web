@@ -1,0 +1,992 @@
+/* =========================================================
+   SEJONG NATIONAL ARBORETUM — LOBBY MAIN
+   Responsive CSS
+   Targets:
+   - Portrait kiosk: 1080 × 1920
+   - Landscape PC: 1920 × 1080+
+   - Tablet landscape: 1205 × 750
+   - Mobile portrait: 393 × 852 / 430 × 932
+   ========================================================= */
+
+/* 01. GLOBAL */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.lobby-page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  color: #064b3b;
+  background: #f5faf6;
+}
+
+.lobby-main {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 28px 40px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  background-color: #f0f0f0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.lobby-main > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 02. WELCOME HEADER */
+
+.welcome-header-area {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.welcome {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+}
+
+.welcome-label {
+  display: block;
+  margin: 0 0 10px;
+  color: #168f68;
+  font-size: clamp(14px, 1.45vw, 24px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+}
+
+.welcome h1 {
+  margin: 0;
+  color: #064b3b;
+  font-size: clamp(30px, 4.3vw, 68px);
+  font-weight: 850;
+  line-height: 1.18;
+  letter-spacing: -0.065em;
+  overflow-wrap: anywhere;
+}
+
+.character-area {
+  display: flex;
+  flex: 0 0 clamp(100px, 17vw, 240px);
+  align-items: flex-start;
+  justify-content: center;
+  width: clamp(100px, 17vw, 240px);
+  min-width: 0;
+}
+
+.lobby-character-img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 240px;
+  object-fit: contain;
+  object-position: top center;
+}
+
+/* 03. MAIN MENU GRID */
+
+.main-grid-menu {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto auto;
+  align-content: start;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 0;
+
+  /* 메뉴를 화면 중앙에서 아래로 밀지 않음 */
+  margin: 35px 0 30px;
+}
+
+/* 04. COMMON CARD */
+
+.grid-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 16px;
+  width: 100%;
+  height: 260px;
+  min-width: 0;
+  min-height: 0;
+  padding: 28px;
+  overflow: hidden;
+  border: 2px solid #dcefe3;
+  border-radius: 30px;
+  color: #064b3b;
+  background: #fff;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.grid-card:focus-visible {
+  outline: 4px solid #168f68;
+  outline-offset: 3px;
+}
+
+.grid-card:active {
+  transform: scale(0.985);
+}
+
+/* 05. FACILITY / DIRECTIONS CARD
+   Icon → title → description
+   Vertical, top-left aligned
+*/
+
+.card-facility-guidance {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 16px;
+  color: #fff;
+  background: #005541;
+  border-color: #005541;
+}
+
+.card-facility-guidance .card-icon-wrap {
+  color: #005541;
+  background: #52c997;
+}
+
+.card-facility-guidance .card-text {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  padding-right: 70px;
+  text-align: left;
+}
+
+.card-facility-guidance .card-text strong {
+  color: #fff;
+}
+
+.card-facility-guidance .card-text p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.card-facility-guidance .card-arrow {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  margin: 0;
+}
+
+/* 06. LUGGAGE CARD */
+
+.card-luggage {
+  grid-column: 1;
+  grid-row: 2;
+  background: #fff;
+  border-color: #dcefe3;
+}
+
+/* 07. SURVEY CARD */
+
+.card-survey {
+  grid-column: 2;
+  grid-row: 2;
+  color: #84375e;
+  background: #fbe3ef;
+  border-color: #fbe3ef;
+}
+
+.card-survey .card-icon-wrap {
+  color: #a64278;
+  background: #fff;
+}
+
+.card-survey .card-text strong {
+  color: #84375e;
+}
+
+.card-survey .card-text p {
+  color: #a66b89;
+}
+
+/* 08. CARD ICON */
+
+.card-icon-wrap {
+  display: flex;
+  flex: 0 0 58px;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  color: #b34580;
+  background: #f9d9e9;
+}
+
+.card-icon-wrap svg {
+  display: block;
+  width: 48%;
+  height: 48%;
+}
+
+/* 09. CARD TEXT */
+
+.card-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+}
+
+.card-text strong {
+  display: block;
+  max-width: 100%;
+  color: inherit;
+  font-size: clamp(22px, 2.2vw, 38px);
+  font-weight: 850;
+  line-height: 1.22;
+  letter-spacing: -0.055em;
+  overflow-wrap: anywhere;
+}
+
+.card-text p {
+  margin: 8px 0 0;
+  color: #718b80;
+  font-size: clamp(14px, 1.25vw, 21px);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+
+/* 10. CARD ARROW */
+
+.card-arrow {
+  display: flex;
+  flex: 0 0 44px;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  border-radius: 50%;
+  color: #005541;
+  background: #fff;
+  font-size: 26px;
+  line-height: 1;
+}
+
+/* 11. VOICE CTA */
+
+.lobby-voice-bar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 88px;
+  padding: 14px 22px;
+  border: 2px solid #dcefe3;
+  border-radius: 999px;
+  color: #064b3b;
+  background: rgba(255, 255, 255, 0.96);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.lobby-voice-bar:focus-visible {
+  outline: 4px solid #168f68;
+  outline-offset: 3px;
+}
+
+.lobby-voice-bar:active {
+  transform: scale(0.99);
+}
+
+.voice-icon-wrap {
+  display: flex;
+  flex: 0 0 52px;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: #fff;
+  background: #e77bb8;
+}
+
+.voice-icon-wrap svg {
+  width: 48%;
+  height: 48%;
+}
+
+.voice-bar-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.voice-bar-text strong {
+  color: #064b3b;
+  font-size: clamp(15px, 1.5vw, 24px);
+  font-weight: 850;
+  line-height: 1.25;
+  letter-spacing: -0.045em;
+  overflow-wrap: anywhere;
+}
+
+.voice-bar-text small {
+  color: #78958a;
+  font-size: clamp(11px, 1vw, 16px);
+  line-height: 1.35;
+}
+
+/* 12. DECORATIVE ELEMENTS */
+
+.leaf,
+.circle,
+.spark {
+  pointer-events: none;
+}
+
+/* =========================================================
+   13. PORTRAIT KIOSK
+   1080 × 1920
+   ========================================================= */
+
+@media (min-width: 800px) and (orientation: portrait) {
+  .lobby-main {
+    padding: 120px 45px;
+  }
+
+  .welcome-header-area {
+    gap: 24px;
+    margin-bottom: 34px;
+  }
+
+  .welcome-label {
+    margin-bottom: 14px;
+    font-size: 24px;
+  }
+
+  .welcome h1 {
+    font-size: clamp(52px, 6vw, 75px);
+  }
+
+  .character-area {
+    flex-basis: 210px;
+    width: 210px;
+  }
+
+  .lobby-character-img {
+    max-height: 240px;
+  }
+
+  .main-grid-menu {
+    gap: 22px;
+    margin-bottom: 26px;
+  }
+
+  .grid-card {
+    height: clamp(290px, 40vh, 400px);
+    padding: 70px 0 0 40px;
+    gap: 18px;
+    border-radius: 32px;
+  }
+
+  .card-icon-wrap {
+    flex-basis: 68px;
+    width: 68px;
+    height: 68px;
+  }
+
+  .card-text strong {
+    font-size: clamp(34px, 4.5vw, 48px);
+  }
+
+  .card-text p {
+    margin-top: 10px;
+    font-size: clamp(19px, 3vw, 32px);
+  }
+
+  .card-arrow {
+    flex-basis: 54px;
+    width: 54px;
+    height: 54px;
+    font-size: 32px;
+  }
+
+  .card-facility-guidance .card-arrow {
+    top: 30px;
+    right: 30px;
+  }
+
+  .card-facility-guidance .card-text {
+    padding-right: 72px;
+  }
+
+  .lobby-voice-bar {
+    min-height: 120px;
+    padding: 16px 24px;
+    gap: 18px;
+  }
+
+  .voice-icon-wrap {
+    flex-basis: 64px;
+    width: 64px;
+    height: 64px;
+  }
+
+  .voice-bar-text strong {
+    font-size: 28px;
+  }
+
+  .voice-bar-text small {
+    font-size: 22px;
+  }
+}
+
+/* =========================================================
+   14. LARGE LANDSCAPE PC
+   1920 × 1080 and larger
+   ========================================================= */
+
+@media (min-width: 1301px) and (orientation: landscape) {
+  .lobby-main {
+    padding: 28px clamp(40px, 4vw, 80px);
+  }
+
+  .welcome-header-area {
+    margin-bottom: 20px;
+  }
+
+  .welcome-label {
+    font-size: clamp(16px, 1.1vw, 24px);
+  }
+
+  .welcome h1 {
+    font-size: clamp(38px, 3.2vw, 58px);
+  }
+
+  .character-area {
+    flex-basis: clamp(120px, 12vw, 200px);
+    width: clamp(120px, 12vw, 200px);
+  }
+
+  .lobby-character-img {
+    max-height: 170px;
+  }
+
+  .main-grid-menu {
+    gap: 18px;
+    margin: 0 0 30px;
+  }
+
+  .grid-card {
+    height: clamp(190px, 25vh, 330px);
+    padding: clamp(22px, 1.8vw, 32px);
+    gap: 14px;
+    border-radius: 28px;
+  }
+
+  .card-icon-wrap {
+    flex-basis: 54px;
+    width: 54px;
+    height: 54px;
+  }
+
+  .card-text strong {
+    font-size: clamp(26px, 2vw, 36px);
+  }
+
+  .card-text p {
+    margin-top: 7px;
+    font-size: clamp(15px, 1.15vw, 20px);
+  }
+
+  .card-arrow {
+    flex-basis: 42px;
+    width: 42px;
+    height: 42px;
+    font-size: 25px;
+  }
+
+  .card-facility-guidance .card-arrow {
+    top: 22px;
+    right: 22px;
+  }
+
+  .lobby-voice-bar {
+    min-height: 120px;
+    padding: 10px 20px;
+    gap: 14px;
+  }
+
+  .voice-icon-wrap {
+    flex-basis: 48px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .voice-bar-text strong {
+    font-size: 18px;
+  }
+
+  .voice-bar-text small {
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   15. TABLET LANDSCAPE
+   Includes 1205 × 750
+   ========================================================= */
+
+@media (min-width: 600px) and (max-width: 1300px) and (orientation: landscape) {
+  .lobby-main {
+    padding: 18px 24px;
+  }
+
+  .welcome-header-area {
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .welcome-label {
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  .welcome h1 {
+    font-size: clamp(28px, 3.4vw, 42px);
+  }
+
+  .character-area {
+    flex-basis: 100px;
+    width: 100px;
+  }
+
+  .lobby-character-img {
+    max-height: 95px;
+  }
+
+  .main-grid-menu {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .grid-card {
+    height: clamp(150px, 24vh, 240px);
+    gap: 10px;
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .card-icon-wrap {
+    flex-basis: 42px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .card-text strong {
+    font-size: clamp(21px, 2.3vw, 28px);
+  }
+
+  .card-text p {
+    margin-top: 5px;
+    font-size: clamp(12px, 1.15vw, 15px);
+  }
+
+  .card-arrow {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+  }
+
+  .card-facility-guidance .card-arrow {
+    top: 16px;
+    right: 16px;
+  }
+
+  .card-facility-guidance .card-text {
+    padding-right: 48px;
+  }
+
+  .lobby-voice-bar {
+    min-height: 62px;
+    padding: 8px 14px;
+    gap: 10px;
+  }
+
+  .voice-icon-wrap {
+    flex-basis: 42px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .voice-bar-text strong {
+    font-size: 15px;
+  }
+
+  .voice-bar-text small {
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   16. MOBILE PORTRAIT
+   393 × 852 / 430 × 932
+   ========================================================= */
+
+@media (max-width: 599px) and (orientation: portrait) {
+  .lobby-page {
+    height: 100vh;
+    height: 100svh;
+  }
+
+  .lobby-main {
+    padding: 18px 14px 14px;
+  }
+
+  .welcome-header-area {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .welcome-label {
+    margin-bottom: 8px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .welcome h1 {
+    font-size: clamp(28px, 7.6vw, 34px);
+    line-height: 1.18;
+  }
+
+  .character-area {
+    flex-basis: clamp(84px, 25vw, 120px);
+    width: clamp(84px, 25vw, 120px);
+  }
+
+  .lobby-character-img {
+    max-height: 120px;
+  }
+
+  .main-grid-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .grid-card {
+    height: clamp(165px, 21vh, 195px);
+    gap: 10px;
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .card-facility-guidance {
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .card-facility-guidance .card-text {
+    padding-right: 38px;
+  }
+
+  .card-icon-wrap {
+    flex-basis: 42px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .card-text strong {
+    font-size: clamp(18px, 5.2vw, 23px);
+    line-height: 1.25;
+  }
+
+  .card-text p {
+    margin-top: 5px;
+    font-size: clamp(11px, 3.1vw, 13px);
+    line-height: 1.4;
+  }
+
+  .card-arrow {
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 19px;
+  }
+
+  .card-facility-guidance .card-arrow {
+    top: 14px;
+    right: 14px;
+  }
+
+  .lobby-voice-bar {
+    min-height: 72px;
+    padding: 9px 13px;
+    gap: 10px;
+  }
+
+  .voice-icon-wrap {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .voice-bar-text strong {
+    font-size: clamp(13px, 3.7vw, 16px);
+  }
+
+  .voice-bar-text small {
+    font-size: clamp(10px, 2.8vw, 12px);
+  }
+}
+
+/* =========================================================
+   17. SHORT LANDSCAPE
+   ========================================================= */
+
+@media (orientation: landscape) and (max-height: 650px) {
+  .lobby-main {
+    padding: 10px 20px;
+  }
+
+  .welcome-header-area {
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .welcome-label {
+    margin-bottom: 4px;
+    font-size: 11px;
+  }
+
+  .welcome h1 {
+    font-size: clamp(21px, 2.8vw, 30px);
+  }
+
+  .character-area {
+    flex-basis: 70px;
+    width: 70px;
+  }
+
+  .lobby-character-img {
+    max-height: 62px;
+  }
+
+  .main-grid-menu {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .grid-card {
+    height: clamp(125px, 23vh, 155px);
+    gap: 7px;
+    padding: 10px 12px;
+    border-radius: 16px;
+  }
+
+  .card-icon-wrap {
+    flex-basis: 32px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .card-text strong {
+    font-size: clamp(16px, 2vw, 22px);
+  }
+
+  .card-text p {
+    margin-top: 3px;
+    font-size: clamp(10px, 1vw, 12px);
+  }
+
+  .card-arrow {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 17px;
+  }
+
+  .card-facility-guidance .card-arrow {
+    top: 10px;
+    right: 10px;
+  }
+
+  .card-facility-guidance .card-text {
+    padding-right: 36px;
+  }
+
+  .lobby-voice-bar {
+    min-height: 44px;
+    padding: 5px 10px;
+    gap: 9px;
+  }
+
+  .voice-icon-wrap {
+    flex-basis: 32px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .voice-bar-text strong {
+    font-size: 12px;
+  }
+
+  .voice-bar-text small {
+    display: none;
+  }
+}
+
+/* 18. VERY SHORT VIEWPORT */
+
+@media (max-height: 500px) {
+  .lobby-main {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .welcome-header-area {
+    margin-bottom: 5px;
+  }
+
+  .welcome-label {
+    margin-bottom: 2px;
+    font-size: 10px;
+  }
+
+  .welcome h1 {
+    font-size: clamp(18px, 2.5vw, 25px);
+  }
+
+  .character-area {
+    flex-basis: 50px;
+    width: 50px;
+  }
+
+  .lobby-character-img {
+    max-height: 44px;
+  }
+
+  .main-grid-menu {
+    gap: 7px;
+    margin-bottom: 7px;
+  }
+
+  .grid-card {
+    height: 108px;
+    gap: 5px;
+    padding: 7px 9px;
+    border-radius: 12px;
+  }
+
+  .card-icon-wrap {
+    flex-basis: 25px;
+    width: 25px;
+    height: 25px;
+  }
+
+  .card-text strong {
+    font-size: 14px;
+  }
+
+  .card-text p {
+    margin-top: 2px;
+    font-size: 9px;
+  }
+
+  .card-arrow {
+    flex-basis: 23px;
+    width: 23px;
+    height: 23px;
+    font-size: 14px;
+  }
+
+  .card-facility-guidance .card-arrow {
+    top: 7px;
+    right: 7px;
+  }
+
+  .lobby-voice-bar {
+    min-height: 36px;
+    padding: 4px 8px;
+  }
+
+  .voice-icon-wrap {
+    flex-basis: 26px;
+    width: 26px;
+    height: 26px;
+  }
+
+  .voice-bar-text strong {
+    font-size: 10px;
+  }
+}
+
+/* 19. REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-card,
+  .lobby-voice-bar {
+    transition: none;
+  }
+}
+
+/* 20. TOUCH DEVICES */
+
+@media (hover: none) {
+  .grid-card:hover,
+  .lobby-voice-bar:hover {
+    transform: none;
+  }
+}

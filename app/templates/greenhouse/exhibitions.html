@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#174d3a" />
+    <title>전시해설 | 국립세종수목원</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/common.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/exhibitions.css') }}"
+    />
+  </head>
+
+  <body class="exhibition-page">
+    <header class="app-header">
+      <div class="brand">
+        <img
+          class="sjna-logo"
+          src="https://www.koagi.or.kr/resources/branch/images/logo/sjna_logo.png"
+          alt="국립세종수목원"
+        />
+      </div>
+
+      <div class="header-status">
+        <div class="language-selector">
+          <label for="languageSelect" class="visually-hidden">언어 선택</label>
+          <select id="languageSelect" aria-label="언어 선택">
+            <option value="ko">🇰🇷 한국어</option>
+            <option value="en">🇺🇸 English</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="zh">🇨🇳 中文</option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          class="home-button"
+          onclick="location.href = '/greenhouse'"
+          aria-label="온실 메인으로 이동"
+          data-i18n-aria="greenhouseHome"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M3 10.5L12 3L21 10.5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M5.5 9.5V20H18.5V9.5"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M9.5 20V14H14.5V20"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+
+        <div class="time" id="currentTime">-</div>
+      </div>
+    </header>
+
+    <main class="exhibition-container">
+      <!-- =================================================
+           1. 전시 시작 화면
+      ================================================== -->
+      <section id="exhibitionStart" class="exhibition-start">
+        <div class="start-background"></div>
+
+        <div class="start-content">
+          <div class="start-character">
+            <img
+              src="{{ url_for('static', filename='images/character_logo.png') }}"
+              alt="안내 캐릭터"
+              onerror="this.style.display = 'none'"
+            />
+          </div>
+
+          <p class="start-eyebrow">SPECIAL EXHIBITION</p>
+          <h1 id="startTitle">어린왕자의 지구여행</h1>
+          <h2 id="startSubtitle">공존, 모두의 정원</h2>
+
+          <p class="start-description">
+            어린왕자와 함께 지구 곳곳을 여행하며<br />
+            다양한 생명과 우리가 함께 살아가는 이야기를 만나보세요.
+          </p>
+
+          <button id="startExhibitionButton" class="primary-button">
+            전시해설 시작하기
+            <span>→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =================================================
+           2. 구역 선택 화면
+      ================================================== -->
+      <section id="zoneSelectView" class="zone-select-view" hidden>
+        <div class="zone-select-heading">
+          <span class="content-badge">EXHIBITION MAP</span>
+          <h1>전시 구역 선택</h1>
+          <p>전시 배치도를 확인하고 원하는 구역을 선택해 주세요.</p>
+        </div>
+
+        <!-- 전시 배치도: 위치 참고용, 클릭 기능 없음 -->
+        <div class="zone-map-area">
+          <img
+            class="zone-map-image"
+            src="{{ url_for('static', filename='images/maps/exhibition_zone_map.png') }}"
+            alt="전시 공간 배치도"
+            onerror="this.style.display = 'none'"
+          />
+        </div>
+
+        <!-- 실제 구역 선택 버튼 -->
+        <div class="zone-button-area">
+          <button type="button" class="zone-select-button" data-zone="1">
+            <span class="zone-button-number">ZONE 1</span>
+            <strong>전시 구역 1</strong>
+            <span class="zone-button-arrow">→</span>
+          </button>
+
+          <button type="button" class="zone-select-button" data-zone="2">
+            <span class="zone-button-number">ZONE 2</span>
+            <strong>전시 구역 2</strong>
+            <span class="zone-button-arrow">→</span>
+          </button>
+
+          <button type="button" class="zone-select-button" data-zone="3">
+            <span class="zone-button-number">ZONE 3</span>
+            <strong>전시 구역 3</strong>
+            <span class="zone-button-arrow">→</span>
+          </button>
+
+          <button type="button" class="zone-select-button" data-zone="4">
+            <span class="zone-button-number">ZONE 4</span>
+            <strong>전시 구역 4</strong>
+            <span class="zone-button-arrow">→</span>
+          </button>
+
+          <button type="button" class="zone-select-button" data-zone="5">
+            <span class="zone-button-number">ZONE 5</span>
+            <strong>전시 구역 5</strong>
+            <span class="zone-button-arrow">→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =================================================
+           3. 전시해설 콘텐츠
+      ================================================== -->
+      <section id="exhibitionViewer" class="exhibition-viewer" hidden>
+        <div class="exhibition-progress-area">
+          <div class="progress-top">
+            <span id="currentSectionLabel">ZONE 1</span>
+            <span id="progressText">1 / 10</span>
+          </div>
+
+          <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </div>
+
+        <article class="exhibition-content">
+          <div class="content-heading">
+            <span id="contentBadge" class="content-badge">ZONE 1</span>
+            <h1 id="contentTitle">전시 제목</h1>
+            <p id="contentSubtitle" class="content-subtitle"></p>
+          </div>
+
+          <div class="content-layout">
+            <div class="content-image-area">
+              <img id="contentImage" src="" alt="" hidden />
+
+              <div id="imageFallback" class="image-fallback">
+                <span class="fallback-icon">🌎</span>
+                <span id="fallbackText">모두의 정원, 지구</span>
+              </div>
+
+              <div id="regionLabel" class="region-label" hidden></div>
+            </div>
+
+            <div class="content-text-area">
+              <p id="contentKeyMessage" class="content-key-message"></p>
+              <div id="contentBody" class="content-body"></div>
+
+              <div id="contentHighlights" class="content-highlights" hidden>
+                <h3>함께 알아보기</h3>
+                <ul id="highlightList"></ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="audio-guide-area">
+            <div class="audio-guide-info">
+              <span class="audio-icon">🔊</span>
+              <div>
+                <strong>음성 해설</strong>
+                <p id="audioStatus">해설을 음성으로 들을 수 있습니다.</p>
+              </div>
+            </div>
+
+            <audio id="exhibitionAudio" preload="none"></audio>
+
+            <div class="audio-controls">
+              <button id="audioPlayButton" class="audio-button">
+                ▶ 음성 듣기
+              </button>
+              <button id="audioStopButton" class="audio-stop-button">
+                ■ 정지
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <nav class="exhibition-navigation">
+          <button id="previousButton" class="navigation-button previous-button">
+            <span>←</span>
+            <span>이전</span>
+          </button>
+
+          <button id="listButton" class="list-button">전체 전시</button>
+
+          <button id="nextButton" class="navigation-button next-button">
+            <span>다음</span>
+            <span>→</span>
+          </button>
+        </nav>
+      </section>
+
+      <!-- =================================================
+           4. 현재 선택 구역의 전시 목차
+      ================================================== -->
+      <section id="exhibitionList" class="exhibition-list" hidden>
+        <div class="list-heading">
+          <span class="content-badge">EXHIBITION GUIDE</span>
+          <h1 id="listTitle">전시해설 목차</h1>
+          <p id="listDescription">
+            원하는 전시 콘텐츠를 선택해 해설을 들을 수 있습니다.
+          </p>
+        </div>
+
+        <div id="sectionCardList" class="section-card-list"></div>
+
+        <div class="list-navigation">
+          <button
+            id="backToViewerButton"
+            class="primary-button list-back-button"
+          >
+            현재 해설로 돌아가기
+          </button>
+
+          <button id="backToZoneButton" class="zone-back-button">
+            다른 구역 선택하기
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/exhibitions.js') }}"></script>
+  </body>
+</html>

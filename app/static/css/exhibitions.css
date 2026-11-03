@@ -1,0 +1,2288 @@
+/* =========================================================
+   국립세종수목원 전시해설
+   File: static/css/exhibitions.css
+
+   Header:
+   - common.css 기존 스타일 유지
+   - 이 파일에서는 헤더 스타일을 변경하지 않음
+
+   Main:
+   - 전시 시작 화면
+   - 전시 해설 콘텐츠
+   - 전체 전시 목차
+
+   지원 화면:
+   - 세로형 키오스크 1080 × 1920
+   - PC 1920 × 1080
+   - 태블릿 1205 × 750
+   - 모바일 393 × 852 / 430 × 932
+========================================================= */
+
+/* =========================================================
+   1. 기본 설정
+========================================================= */
+
+:root {
+  --ex-green: #005541;
+  --ex-green-dark: #17452f;
+  --ex-green-light: #e8f0e8;
+  --ex-green-pale: #f3f7f1;
+
+  --ex-text: #25382d;
+  --ex-muted: #758178;
+
+  --ex-background: #f6f7f2;
+  --ex-card: #ffffff;
+  --ex-border: #e2e9e0;
+
+  --ex-radius-lg: 28px;
+  --ex-radius-md: 20px;
+  --ex-radius-sm: 14px;
+
+  --ex-shadow: 0 10px 32px rgba(34, 70, 48, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+}
+
+/* ---------------------------------------------------------
+
+   HOME BUTTON
+
+   \--------------------------------------------------------- */
+
+.home-button {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  min-width: 80px;
+
+  min-height: 55px;
+
+  padding: 0 14px;
+
+  border: 1px solid #d9e6dc;
+
+  border-radius: 999px;
+
+  background: #ffffff;
+
+  color: var(--green-dark);
+
+  font: inherit;
+
+  font-size: clamp(12px, 0.85vw, 15px);
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.home-button svg {
+  width: 35px;
+
+  height: 35px;
+
+  flex-shrink: 0;
+}
+
+.home-button:hover {
+  background: var(--green-light);
+
+  border-color: #b9d6c0;
+
+  transform: translateY(-1px);
+}
+
+.home-button:active {
+  transform: scale(0.97);
+}
+
+body.exhibition-page {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+
+  overflow: hidden;
+
+  font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+  color: var(--ex-text);
+  background: var(--ex-background);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+button:focus-visible,
+select:focus-visible {
+  outline: 3px solid #86b89a;
+  outline-offset: 3px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* =========================================================
+   2. 메인 페이지 프레임
+
+   헤더는 common.css에 맡김
+========================================================= */
+
+.exhibition-container {
+  position: relative;
+
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  padding: clamp(18px, 2.2vw, 42px);
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+
+  background: var(--ex-background);
+}
+
+/* =========================================================
+   3. 공통 버튼
+========================================================= */
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+
+  min-width: 230px;
+  min-height: 66px;
+
+  padding: 0 32px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: var(--ex-green);
+  color: #ffffff;
+
+  font-size: clamp(16px, 1.2vw, 21px);
+  font-weight: 800;
+
+  box-shadow: 0 8px 20px rgba(0, 85, 65, 0.18);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.primary-button:hover {
+  background: var(--ex-green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 85, 65, 0.22);
+}
+
+.primary-button:active {
+  transform: scale(0.98);
+}
+
+.primary-button span {
+  font-size: 1.3em;
+}
+
+/* =========================================================
+   4. 전시 시작 화면
+========================================================= */
+
+.exhibition-start {
+  position: relative;
+
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  padding: clamp(20px, 3vw, 56px);
+
+  overflow: hidden;
+
+  border-radius: var(--ex-radius-lg);
+
+  background: radial-gradient(
+    circle at 50% 15%,
+    rgba(255, 255, 255, 0.96),
+    rgba(244, 249, 239, 0.95) 42%,
+    rgba(225, 239, 222, 0.95) 100%
+  );
+}
+
+.start-background {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 12% 80%,
+      rgba(91, 170, 119, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(111, 179, 142, 0.14),
+      transparent 28%
+    );
+}
+
+.start-content {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 1100px;
+
+  text-align: center;
+}
+
+.start-character {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: clamp(130px, 15vw, 230px);
+  height: clamp(130px, 15vw, 230px);
+
+  margin-bottom: 16px;
+}
+
+.start-character img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+.start-eyebrow {
+  margin: 0 0 12px;
+
+  color: var(--ex-green);
+  font-size: clamp(12px, 1vw, 17px);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+}
+
+.start-content h1 {
+  margin: 0;
+
+  color: var(--ex-green-dark);
+  font-size: clamp(34px, 4vw, 60px);
+  font-weight: 900;
+  line-height: 1.25;
+  letter-spacing: -0.055em;
+  word-break: keep-all;
+}
+
+.start-content h2 {
+  margin: 12px 0 0;
+
+  color: #56846a;
+  font-size: clamp(22px, 2.5vw, 38px);
+  font-weight: 800;
+  line-height: 1.4;
+  word-break: keep-all;
+}
+
+.start-description {
+  margin: 28px 0 0;
+
+  color: #5e7062;
+  font-size: clamp(15px, 1.25vw, 21px);
+  font-weight: 500;
+  line-height: 1.9;
+
+  word-break: keep-all;
+}
+
+#startExhibitionButton {
+  margin-top: 36px;
+}
+
+/* =========================================================
+   5. 전시 해설 뷰어
+========================================================= */
+
+.exhibition-viewer {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 1800px;
+  min-width: 0;
+  min-height: 0;
+
+  margin: 0 auto;
+
+  gap: clamp(14px, 1.5vh, 24px);
+}
+
+/* 진행 상태 */
+
+.exhibition-progress-area {
+  flex: 0 0 auto;
+
+  width: 100%;
+  padding: 0 4px;
+}
+
+.progress-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 10px;
+}
+
+#currentSectionLabel {
+  color: var(--ex-green);
+  font-size: clamp(12px, 0.9vw, 16px);
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+
+#progressText {
+  color: var(--ex-muted);
+  font-size: clamp(12px, 0.9vw, 15px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+  background: #dfe9df;
+}
+
+.progress-bar {
+  width: 0;
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: linear-gradient(90deg, #3c9b70, #73c89b);
+
+  transition: width 0.3s ease;
+}
+
+/* =========================================================
+   6. 전시 콘텐츠 카드
+========================================================= */
+
+.exhibition-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: clamp(22px, 2.3vw, 40px);
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+
+  border: 1px solid var(--ex-border);
+  border-radius: var(--ex-radius-lg);
+
+  background: var(--ex-card);
+  box-shadow: var(--ex-shadow);
+}
+
+/* 제목 영역 */
+
+.content-heading {
+  flex: 0 0 auto;
+  margin-bottom: clamp(18px, 2vw, 30px);
+}
+
+.content-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 34px;
+  padding: 7px 15px;
+
+  border-radius: 999px;
+
+  background: var(--ex-green-light);
+  color: var(--ex-green-dark);
+
+  font-size: clamp(11px, 0.85vw, 15px);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.content-heading h1 {
+  margin: 16px 0 0;
+
+  color: var(--ex-text);
+  font-size: clamp(28px, 2.5vw, 46px);
+  font-weight: 900;
+  line-height: 1.25;
+  letter-spacing: -0.045em;
+
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.content-subtitle {
+  margin: 10px 0 0;
+
+  color: var(--ex-muted);
+  font-size: clamp(14px, 1.05vw, 19px);
+  line-height: 1.6;
+
+  word-break: keep-all;
+}
+
+/* =========================================================
+   7. 콘텐츠 이미지 + 설명 2열
+========================================================= */
+
+.content-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 0.85fr)
+    minmax(0, 1.15fr);
+
+  flex: 1 1 auto;
+
+  gap: clamp(20px, 2.2vw, 36px);
+
+  min-width: 0;
+  min-height: 0;
+}
+
+/* 이미지 */
+
+.content-image-area {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+  min-height: 250px;
+
+  overflow: hidden;
+
+  border-radius: var(--ex-radius-md);
+
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(255, 255, 255, 0.9),
+      transparent 38%
+    ),
+    linear-gradient(145deg, #e4eee0, #b6ceb4);
+}
+
+.content-image-area > img {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+.image-fallback {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+
+  padding: 20px;
+
+  color: var(--ex-green-dark);
+  text-align: center;
+}
+
+.fallback-icon {
+  font-size: clamp(64px, 7vw, 120px);
+  line-height: 1;
+}
+
+#fallbackText {
+  font-size: clamp(14px, 1.1vw, 20px);
+  font-weight: 800;
+  word-break: keep-all;
+}
+
+/* 이미지 위 지역명 표시 */
+
+.region-label {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+
+  z-index: 2;
+
+  max-width: calc(100% - 36px);
+
+  padding: 10px 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+
+  background: rgba(23, 69, 47, 0.88);
+  color: #ffffff;
+
+  font-size: clamp(12px, 0.9vw, 16px);
+  font-weight: 800;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* =========================================================
+   8. 설명 영역
+========================================================= */
+
+.content-text-area {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+}
+
+.content-key-message {
+  margin: 0 0 18px;
+  padding: 17px 20px;
+
+  border-left: 5px solid #58a77b;
+  border-radius: 0 12px 12px 0;
+
+  background: #f0f7ef;
+
+  color: var(--ex-green-dark);
+  font-size: clamp(16px, 1.25vw, 22px);
+  font-weight: 800;
+  line-height: 1.65;
+
+  word-break: keep-all;
+}
+
+.content-body {
+  color: #59685d;
+
+  font-size: clamp(14px, 1.05vw, 19px);
+  line-height: 1.9;
+
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.content-body p {
+  margin: 0 0 14px;
+}
+
+.content-body p:last-child {
+  margin-bottom: 0;
+}
+
+.content-body strong {
+  color: var(--ex-green-dark);
+  font-weight: 900;
+}
+
+/* 함께 알아보기 */
+
+.content-highlights {
+  margin-top: 24px;
+  padding: 20px 22px;
+
+  border: 1px solid #e1eadf;
+  border-radius: 16px;
+
+  background: #f8faf6;
+}
+
+.content-highlights h3 {
+  margin: 0 0 12px;
+
+  color: var(--ex-green-dark);
+  font-size: clamp(15px, 1.05vw, 19px);
+  font-weight: 900;
+}
+
+.content-highlights ul {
+  display: flex;
+  flex-direction: column;
+
+  gap: 9px;
+
+  margin: 0;
+  padding: 0 0 0 20px;
+
+  color: #58695c;
+  font-size: clamp(13px, 0.95vw, 17px);
+  line-height: 1.7;
+}
+
+.content-highlights li::marker {
+  color: #58a77b;
+}
+
+/* =========================================================
+   9. 음성 해설 플레이어
+========================================================= */
+
+.audio-guide-area {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-top: clamp(18px, 2vh, 28px);
+  padding: clamp(16px, 1.6vw, 26px);
+
+  border-radius: var(--ex-radius-md);
+
+  background: #f3f7f1;
+}
+
+.audio-guide-info {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+  min-width: 0;
+}
+
+.audio-icon {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
+  border-radius: 50%;
+
+  background: #e77bb8;
+  color: #ffffff;
+
+  font-size: 23px;
+}
+
+.audio-guide-info > div {
+  min-width: 0;
+}
+
+.audio-guide-info strong {
+  display: block;
+
+  color: var(--ex-text);
+  font-size: clamp(14px, 1.05vw, 18px);
+  font-weight: 900;
+}
+
+#audioStatus {
+  margin: 5px 0 0;
+
+  color: var(--ex-muted);
+  font-size: clamp(11px, 0.85vw, 14px);
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+.audio-controls {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.audio-button,
+.audio-stop-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 48px;
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 12px;
+
+  font-size: clamp(12px, 0.95vw, 16px);
+  font-weight: 800;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.audio-button {
+  background: #e77bb8;
+  color: #ffffff;
+}
+
+.audio-button:hover {
+  background: var(--ex-green-dark);
+}
+
+.audio-stop-button {
+  border: 1px solid #dce5d9;
+  background: #ffffff;
+  color: #526257;
+}
+
+.audio-stop-button:hover {
+  background: #e8f0e8;
+}
+
+.audio-button:active,
+.audio-stop-button:active {
+  transform: scale(0.97);
+}
+
+#exhibitionAudio {
+  display: none;
+}
+
+/* =========================================================
+   10. 하단 내비게이션
+========================================================= */
+
+.exhibition-navigation {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  width: 100%;
+  padding-top: 2px;
+}
+
+.navigation-button,
+.list-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 150px;
+  min-height: 58px;
+
+  gap: 12px;
+  padding: 0 24px;
+
+  border: 1px solid transparent;
+  border-radius: 14px;
+
+  font-size: clamp(14px, 1vw, 18px);
+  font-weight: 900;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.navigation-button:active,
+.list-button:active {
+  transform: scale(0.97);
+}
+
+.previous-button {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: var(--ex-green-dark);
+}
+
+.previous-button:hover {
+  background: #e8f0e8;
+}
+
+.next-button {
+  background: var(--ex-green);
+  color: #ffffff;
+}
+
+.next-button:hover {
+  background: var(--ex-green-dark);
+}
+
+.list-button {
+  border-color: #dce7dc;
+  background: #edf3eb;
+  color: var(--ex-green-dark);
+}
+
+.list-button:hover {
+  background: #dcebdc;
+}
+
+.navigation-button span:first-child {
+  font-size: 1.3em;
+}
+
+/* =========================================================
+   11. 전체 전시 목차
+========================================================= */
+
+.exhibition-list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 1600px;
+  min-width: 0;
+  min-height: 0;
+
+  margin: 0 auto;
+
+  gap: 24px;
+}
+
+.list-heading {
+  flex: 0 0 auto;
+}
+
+.list-heading h1 {
+  margin: 16px 0 0;
+
+  color: var(--ex-green-dark);
+  font-size: clamp(28px, 2.5vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.list-heading p {
+  margin: 10px 0 0;
+
+  color: var(--ex-muted);
+  font-size: clamp(14px, 1.05vw, 18px);
+  line-height: 1.6;
+}
+
+.section-card-list {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+
+  width: 100%;
+  min-width: 0;
+}
+
+.section-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  min-width: 0;
+  min-height: 150px;
+
+  padding: 22px;
+
+  border: 1px solid var(--ex-border);
+  border-radius: 18px;
+
+  background: #ffffff;
+  box-shadow: var(--ex-shadow);
+
+  text-align: left;
+
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.section-card:hover {
+  transform: translateY(-3px);
+  border-color: #9dc6a7;
+  background: #f8fbf6;
+}
+
+.section-card:active {
+  transform: scale(0.98);
+}
+
+.section-card-code {
+  color: #5d9a72;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.section-card-title {
+  margin-top: 12px;
+
+  color: var(--ex-green-dark);
+  font-size: clamp(16px, 1.15vw, 21px);
+  font-weight: 900;
+  line-height: 1.4;
+
+  word-break: keep-all;
+}
+
+.section-card-description {
+  margin-top: 8px;
+
+  color: var(--ex-muted);
+  font-size: clamp(12px, 0.9vw, 15px);
+  line-height: 1.6;
+
+  word-break: keep-all;
+}
+
+.list-back-button {
+  align-self: center;
+  margin-top: auto;
+}
+
+/* =========================================================
+   12. 대형 PC 화면
+   예: 1920 × 1080
+========================================================= */
+
+@media (min-width: 1600px) and (orientation: landscape) {
+  .exhibition-container {
+    padding: 34px 52px 30px;
+  }
+
+  .exhibition-viewer {
+    gap: 22px;
+  }
+
+  .exhibition-content {
+    padding: 40px 46px;
+  }
+
+  .content-layout {
+    grid-template-columns:
+      minmax(0, 0.9fr)
+      minmax(0, 1.1fr);
+
+    gap: 36px;
+  }
+
+  .content-image-area {
+    min-height: 360px;
+  }
+
+  .content-body {
+    max-width: 850px;
+  }
+
+  .section-card-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   13. 태블릿 가로
+   예: 1205 × 750
+========================================================= */
+
+@media (min-width: 701px) and (max-width: 1300px) {
+  .exhibition-container {
+    padding: 18px 24px;
+  }
+
+  .exhibition-viewer {
+    gap: 12px;
+  }
+
+  .progress-track {
+    height: 6px;
+  }
+
+  .exhibition-content {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .content-heading {
+    margin-bottom: 14px;
+  }
+
+  .content-heading h1 {
+    margin-top: 10px;
+    font-size: 29px;
+  }
+
+  .content-subtitle {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+
+  .content-layout {
+    grid-template-columns:
+      minmax(0, 0.85fr)
+      minmax(0, 1.15fr);
+
+    gap: 16px;
+  }
+
+  .content-image-area {
+    min-height: 180px;
+    border-radius: 14px;
+  }
+
+  .content-key-message {
+    margin-bottom: 10px;
+    padding: 11px 14px;
+    font-size: 15px;
+  }
+
+  .content-body {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .content-body p {
+    margin-bottom: 8px;
+  }
+
+  .content-highlights {
+    margin-top: 12px;
+    padding: 12px 14px;
+  }
+
+  .content-highlights h3 {
+    margin-bottom: 7px;
+    font-size: 13px;
+  }
+
+  .content-highlights ul {
+    gap: 4px;
+    font-size: 12px;
+  }
+
+  .audio-guide-area {
+    gap: 12px;
+    margin-top: 12px;
+    padding: 12px 15px;
+  }
+
+  .audio-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .audio-guide-info strong {
+    font-size: 13px;
+  }
+
+  #audioStatus {
+    font-size: 10px;
+  }
+
+  .audio-button,
+  .audio-stop-button {
+    min-height: 38px;
+    padding: 0 12px;
+    font-size: 11px;
+  }
+
+  .navigation-button,
+  .list-button {
+    min-width: 110px;
+    min-height: 42px;
+    padding: 0 15px;
+    border-radius: 10px;
+    font-size: 12px;
+  }
+
+  .section-card-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .section-card {
+    min-height: 120px;
+    padding: 16px;
+  }
+
+  .list-heading h1 {
+    font-size: 30px;
+  }
+
+  .list-heading p {
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   14. 태블릿 세로 / 세로형 키오스크
+   예: 1080 × 1920
+========================================================= */
+
+@media (min-width: 701px) and (max-width: 1300px) and (min-height: 1000px) {
+  .exhibition-container {
+    padding: 48px 60px;
+  }
+
+  .exhibition-start {
+    padding: 48px;
+  }
+
+  .start-content {
+    max-width: 900px;
+  }
+
+  .start-character {
+    width: 280px;
+    height: 280px;
+    margin-bottom: 30px;
+  }
+
+  .start-eyebrow {
+    font-size: 21px;
+  }
+
+  .start-content h1 {
+    font-size: 58px;
+  }
+
+  .start-content h2 {
+    font-size: 38px;
+  }
+
+  .start-description {
+    margin-top: 30px;
+    font-size: 25px;
+  }
+
+  #startExhibitionButton {
+    min-width: 360px;
+    min-height: 90px;
+    margin-top: 44px;
+    font-size: 28px;
+  }
+
+  .exhibition-viewer {
+    gap: 24px;
+  }
+
+  .progress-top {
+    margin-bottom: 14px;
+  }
+
+  .progress-track {
+    height: 10px;
+  }
+
+  .exhibition-content {
+    padding: 38px;
+    border-radius: 28px;
+  }
+
+  .content-heading {
+    margin-bottom: 24px;
+  }
+
+  .content-heading h1 {
+    margin-top: 20px;
+    font-size: 44px;
+  }
+
+  .content-subtitle {
+    margin-top: 12px;
+    font-size: 22px;
+  }
+
+  .content-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 24px;
+  }
+
+  .content-image-area {
+    min-height: 400px;
+    max-height: 520px;
+    border-radius: 24px;
+  }
+
+  .fallback-icon {
+    font-size: 140px;
+  }
+
+  #fallbackText {
+    font-size: 23px;
+  }
+
+  .region-label {
+    left: 24px;
+    bottom: 24px;
+    padding: 13px 20px;
+    font-size: 18px;
+  }
+
+  .content-key-message {
+    margin-bottom: 20px;
+    padding: 22px 26px;
+    font-size: 23px;
+  }
+
+  .content-body {
+    font-size: 20px;
+    line-height: 1.9;
+  }
+
+  .content-body p {
+    margin-bottom: 18px;
+  }
+
+  .content-highlights {
+    margin-top: 24px;
+    padding: 22px 26px;
+  }
+
+  .content-highlights h3 {
+    font-size: 21px;
+  }
+
+  .content-highlights ul {
+    font-size: 19px;
+    gap: 10px;
+  }
+
+  .audio-guide-area {
+    margin-top: 28px;
+    padding: 24px;
+  }
+
+  .audio-icon {
+    width: 54px;
+    height: 54px;
+    font-size: 26px;
+  }
+
+  .audio-guide-info strong {
+    font-size: 20px;
+  }
+
+  #audioStatus {
+    font-size: 16px;
+  }
+
+  .audio-button,
+  .audio-stop-button {
+    min-height: 60px;
+    padding: 0 24px;
+    font-size: 18px;
+  }
+
+  .navigation-button,
+  .list-button {
+    min-width: 190px;
+    min-height: 72px;
+    padding: 0 28px;
+    font-size: 20px;
+  }
+
+  .section-card-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .section-card {
+    min-height: 180px;
+    padding: 26px;
+  }
+
+  .section-card-title {
+    font-size: 23px;
+  }
+
+  .section-card-description {
+    font-size: 17px;
+  }
+}
+
+/* =========================================================
+   15. 모바일
+   예: 393 × 852 / 430 × 932
+========================================================= */
+
+@media (max-width: 700px) {
+  body.exhibition-page {
+    overflow: hidden;
+  }
+
+  .exhibition-container {
+    padding: 12px;
+  }
+
+  /* 시작 화면 */
+
+  .exhibition-start {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .start-character {
+    width: clamp(110px, 32vw, 160px);
+    height: clamp(110px, 32vw, 160px);
+    margin-bottom: 14px;
+  }
+
+  .start-eyebrow {
+    margin-bottom: 8px;
+    font-size: 10px;
+  }
+
+  .start-content h1 {
+    font-size: clamp(25px, 7vw, 34px);
+  }
+
+  .start-content h2 {
+    margin-top: 7px;
+    font-size: clamp(18px, 5vw, 24px);
+  }
+
+  .start-description {
+    margin-top: 18px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .primary-button {
+    min-width: 190px;
+    min-height: 52px;
+    padding: 0 22px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  #startExhibitionButton {
+    margin-top: 24px;
+  }
+
+  /* 해설 화면 */
+
+  .exhibition-viewer {
+    gap: 10px;
+  }
+
+  .progress-top {
+    margin-bottom: 7px;
+  }
+
+  #currentSectionLabel,
+  #progressText {
+    font-size: 10px;
+  }
+
+  .progress-track {
+    height: 5px;
+  }
+
+  .exhibition-content {
+    padding: 14px;
+    border-radius: 15px;
+  }
+
+  .content-heading {
+    margin-bottom: 12px;
+  }
+
+  .content-badge {
+    min-height: 24px;
+    padding: 4px 9px;
+    font-size: 9px;
+  }
+
+  .content-heading h1 {
+    margin-top: 9px;
+    font-size: clamp(21px, 5.8vw, 27px);
+  }
+
+  .content-subtitle {
+    margin-top: 6px;
+    font-size: 11px;
+  }
+
+  .content-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    gap: 10px;
+  }
+
+  .content-image-area {
+    flex: 0 0 auto;
+    min-height: 145px;
+    max-height: 210px;
+    border-radius: 12px;
+  }
+
+  .fallback-icon {
+    font-size: 55px;
+  }
+
+  #fallbackText {
+    font-size: 11px;
+  }
+
+  .region-label {
+    left: 10px;
+    bottom: 10px;
+    padding: 6px 10px;
+    font-size: 9px;
+  }
+
+  .content-text-area {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .content-key-message {
+    margin-bottom: 9px;
+    padding: 9px 11px;
+    border-left-width: 3px;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .content-body {
+    font-size: 11px;
+    line-height: 1.65;
+  }
+
+  .content-body p {
+    margin-bottom: 7px;
+  }
+
+  .content-highlights {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .content-highlights h3 {
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+
+  .content-highlights ul {
+    gap: 4px;
+    padding-left: 16px;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  /* 음성 */
+
+  .audio-guide-area {
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 9px;
+
+    margin-top: 12px;
+    padding: 10px;
+
+    border-radius: 11px;
+  }
+
+  .audio-guide-info {
+    gap: 8px;
+  }
+
+  .audio-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+  }
+
+  .audio-guide-info strong {
+    font-size: 11px;
+  }
+
+  #audioStatus {
+    margin-top: 3px;
+    font-size: 9px;
+  }
+
+  .audio-controls {
+    gap: 7px;
+  }
+
+  .audio-button,
+  .audio-stop-button {
+    flex: 1 1 0;
+    min-height: 34px;
+    padding: 0 8px;
+    border-radius: 8px;
+    font-size: 10px;
+  }
+
+  /* 하단 내비게이션 */
+
+  .exhibition-navigation {
+    gap: 6px;
+  }
+
+  .navigation-button,
+  .list-button {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 38px;
+    gap: 5px;
+    padding: 0 6px;
+    border-radius: 8px;
+    font-size: 10px;
+  }
+
+  /* 전체 목차 */
+
+  .exhibition-list {
+    gap: 14px;
+    overflow-y: auto;
+    padding: 4px;
+  }
+
+  .list-heading h1 {
+    margin-top: 10px;
+    font-size: 25px;
+  }
+
+  .list-heading p {
+    margin-top: 6px;
+    font-size: 11px;
+  }
+
+  .section-card-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .section-card {
+    min-height: 105px;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .section-card-code {
+    font-size: 9px;
+  }
+
+  .section-card-title {
+    margin-top: 7px;
+    font-size: 12px;
+  }
+
+  .section-card-description {
+    margin-top: 5px;
+    font-size: 9px;
+  }
+
+  .list-back-button {
+    width: 100%;
+    min-height: 42px;
+    margin-top: 0;
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   16. 낮은 높이의 태블릿 / 가로 화면
+   예: 1205 × 750
+========================================================= */
+
+@media (min-width: 701px) and (max-height: 800px) {
+  .exhibition-container {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .exhibition-viewer {
+    gap: 10px;
+  }
+
+  .exhibition-content {
+    overflow-y: auto;
+    padding: 18px;
+  }
+
+  .content-heading {
+    margin-bottom: 12px;
+  }
+
+  .content-heading h1 {
+    margin-top: 9px;
+    font-size: 27px;
+  }
+
+  .content-subtitle {
+    margin-top: 5px;
+    font-size: 12px;
+  }
+
+  .content-image-area {
+    min-height: 160px;
+  }
+
+  .content-key-message {
+    margin-bottom: 8px;
+    padding: 10px 13px;
+    font-size: 14px;
+  }
+
+  .content-body {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .content-body p {
+    margin-bottom: 7px;
+  }
+
+  .audio-guide-area {
+    margin-top: 10px;
+    padding: 10px 14px;
+  }
+
+  .audio-button,
+  .audio-stop-button {
+    min-height: 36px;
+  }
+
+  .navigation-button,
+  .list-button {
+    min-height: 40px;
+  }
+}
+
+/* =========================================================
+   17. 아주 낮은 화면
+========================================================= */
+
+@media (max-height: 620px) {
+  .exhibition-container {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .exhibition-viewer {
+    gap: 7px;
+  }
+
+  .progress-top {
+    margin-bottom: 5px;
+  }
+
+  .exhibition-content {
+    padding: 12px;
+  }
+
+  .content-heading {
+    margin-bottom: 8px;
+  }
+
+  .content-heading h1 {
+    margin-top: 7px;
+    font-size: 22px;
+  }
+
+  .content-subtitle {
+    margin-top: 4px;
+    font-size: 11px;
+  }
+
+  .content-image-area {
+    min-height: 120px;
+  }
+
+  .content-key-message {
+    margin-bottom: 7px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .content-body {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  .audio-guide-area {
+    margin-top: 7px;
+    padding: 8px;
+  }
+
+  .audio-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .audio-button,
+  .audio-stop-button {
+    min-height: 32px;
+  }
+
+  .navigation-button,
+  .list-button {
+    min-height: 34px;
+  }
+}
+
+/* =========================================================
+   18. 비활성 상태
+========================================================= */
+
+.navigation-button:disabled,
+.audio-button:disabled,
+.audio-stop-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#audioStatus.is-error {
+  color: #b42318;
+}
+
+/* =========================================================
+   19. 모션 최소화
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* =========================================================
+   20. 전시 구역 선택 화면
+========================================================= */
+
+.zone-select-view {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 1500px;
+  min-width: 0;
+  min-height: 0;
+
+  margin: 0 auto;
+  gap: clamp(14px, 1.5vw, 24px);
+
+  overflow-y: auto;
+}
+
+.zone-select-heading {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.zone-select-heading h1 {
+  margin: 12px 0 0;
+
+  color: var(--ex-green-dark);
+  font-size: clamp(27px, 2.5vw, 42px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.zone-select-heading p {
+  margin: 8px 0 0;
+
+  color: var(--ex-muted);
+  font-size: clamp(13px, 1vw, 18px);
+  line-height: 1.6;
+}
+
+/* 전시 배치도 */
+
+.zone-map-area {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+
+  padding: clamp(10px, 1.5vw, 22px);
+
+  overflow: hidden;
+
+  border: 1px solid var(--ex-border);
+  border-radius: var(--ex-radius-lg);
+
+  background: #ffffff;
+  box-shadow: var(--ex-shadow);
+}
+
+.zone-map-image {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  max-height: 100%;
+
+  object-fit: contain;
+}
+
+/* 구역 버튼 */
+
+.zone-button-area {
+  display: grid;
+
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+
+  gap: clamp(8px, 1.2vw, 16px);
+
+  width: 100%;
+}
+
+.zone-select-button {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  min-width: 0;
+  min-height: clamp(76px, 9vh, 110px);
+
+  padding: clamp(12px, 1.3vw, 20px);
+
+  border: 1px solid var(--ex-border);
+  border-radius: 16px;
+
+  background: #ffffff;
+  color: var(--ex-green-dark);
+
+  text-align: left;
+
+  box-shadow: 0 5px 18px rgba(34, 70, 48, 0.06);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.zone-select-button:hover {
+  transform: translateY(-3px);
+
+  border-color: #83b798;
+  background: #f2f8f1;
+
+  box-shadow: 0 10px 24px rgba(34, 70, 48, 0.12);
+}
+
+.zone-select-button:active {
+  transform: scale(0.97);
+}
+
+.zone-button-number {
+  color: #5d9a72;
+
+  font-size: clamp(10px, 0.8vw, 13px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.zone-select-button strong {
+  margin-top: 7px;
+
+  padding-right: 22px;
+
+  color: var(--ex-green-dark);
+
+  font-size: clamp(13px, 1.05vw, 19px);
+  font-weight: 900;
+  line-height: 1.4;
+
+  word-break: keep-all;
+}
+
+.zone-button-arrow {
+  position: absolute;
+  right: clamp(10px, 1.1vw, 18px);
+  bottom: clamp(12px, 1.3vw, 20px);
+
+  color: #65a47a;
+
+  font-size: clamp(17px, 1.5vw, 24px);
+  font-weight: 900;
+}
+
+/* 돌아가기 */
+
+.zone-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  align-self: center;
+
+  min-width: 180px;
+  min-height: 48px;
+
+  padding: 0 22px;
+
+  border: 1px solid #dce7dc;
+  border-radius: 12px;
+
+  background: #ffffff;
+  color: var(--ex-green-dark);
+
+  font-size: 14px;
+  font-weight: 800;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.zone-back-button:hover {
+  background: #e8f0e8;
+}
+
+.zone-back-button:active {
+  transform: scale(0.97);
+}
+
+/* 목차 하단 버튼 */
+
+.list-navigation {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 12px;
+  margin-top: auto;
+}
+
+.list-navigation .list-back-button {
+  margin-top: 0;
+  align-self: auto;
+}
+
+/* =========================================================
+   21. 태블릿 및 낮은 화면
+========================================================= */
+
+@media (min-width: 701px) and (max-width: 1300px) {
+  .zone-select-view {
+    gap: 12px;
+  }
+
+  .zone-map-area {
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  .zone-button-area {
+    gap: 8px;
+  }
+
+  .zone-select-button {
+    min-height: 70px;
+    padding: 10px;
+    border-radius: 11px;
+  }
+
+  .zone-select-button strong {
+    margin-top: 5px;
+    font-size: 13px;
+  }
+
+  .zone-button-number {
+    font-size: 9px;
+  }
+
+  .zone-button-arrow {
+    right: 8px;
+    bottom: 9px;
+    font-size: 16px;
+  }
+
+  .zone-back-button {
+    min-height: 40px;
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   22. 세로형 키오스크
+========================================================= */
+
+@media (min-width: 701px) and (max-width: 1300px) and (min-height: 1000px) {
+  .zone-select-view {
+    gap: 24px;
+  }
+
+  .zone-select-heading h1 {
+    font-size: 42px;
+  }
+
+  .zone-select-heading p {
+    font-size: 20px;
+  }
+
+  .zone-map-area {
+    padding: 24px;
+    border-radius: 24px;
+  }
+
+  .zone-button-area {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .zone-select-button {
+    min-height: 110px;
+    padding: 22px;
+    border-radius: 18px;
+  }
+
+  .zone-button-number {
+    font-size: 15px;
+  }
+
+  .zone-select-button strong {
+    margin-top: 10px;
+    font-size: 22px;
+  }
+
+  .zone-button-arrow {
+    right: 20px;
+    bottom: 20px;
+    font-size: 25px;
+  }
+
+  .zone-back-button {
+    min-width: 250px;
+    min-height: 64px;
+    font-size: 18px;
+  }
+}
+
+/* =========================================================
+   23. 모바일
+========================================================= */
+
+@media (max-width: 700px) {
+  .zone-select-view {
+    gap: 12px;
+    padding: 4px;
+  }
+
+  .zone-select-heading {
+    padding-top: 4px;
+  }
+
+  .zone-select-heading h1 {
+    margin-top: 8px;
+    font-size: 24px;
+  }
+
+  .zone-select-heading p {
+    margin-top: 5px;
+    font-size: 11px;
+  }
+
+  .zone-map-area {
+    flex: 0 0 auto;
+
+    min-height: 180px;
+    max-height: 30vh;
+
+    padding: 8px;
+
+    border-radius: 12px;
+  }
+
+  .zone-map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .zone-button-area {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .zone-select-button {
+    min-height: 66px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .zone-button-number {
+    font-size: 9px;
+  }
+
+  .zone-select-button strong {
+    margin-top: 5px;
+    font-size: 12px;
+  }
+
+  .zone-button-arrow {
+    right: 9px;
+    bottom: 9px;
+    font-size: 15px;
+  }
+
+  .zone-back-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    font-size: 11px;
+  }
+
+  .list-navigation {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .list-navigation .list-back-button,
+  .list-navigation .zone-back-button {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   24. 낮은 높이 화면
+========================================================= */
+
+@media (min-width: 701px) and (max-height: 800px) {
+  .zone-select-view {
+    gap: 9px;
+  }
+
+  .zone-select-heading h1 {
+    margin-top: 6px;
+    font-size: 25px;
+  }
+
+  .zone-select-heading p {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
+  .zone-map-area {
+    padding: 8px;
+  }
+
+  .zone-select-button {
+    min-height: 58px;
+    padding: 8px 12px;
+  }
+
+  .zone-select-button strong {
+    margin-top: 3px;
+    font-size: 12px;
+  }
+
+  .zone-back-button {
+    min-height: 36px;
+  }
+}

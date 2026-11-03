@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>시설 안내 | 국립세종수목원</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/common.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/facilities.css') }}"
+    />
+  </head>
+  <body class="facilities-body">
+    <div class="facilities-page" data-source="{{ source }}">
+      <header class="app-header">
+        <div class="brand">
+          <img
+            class="sjna-logo"
+            src="https://www.koagi.or.kr/resources/branch/images/logo/sjna_logo.png"
+            alt="국립세종수목원"
+          />
+        </div>
+        <div class="header-status">
+          <div class="language-selector">
+            <label for="languageSelect" class="visually-hidden"
+              >언어 선택</label
+            >
+            <select id="languageSelect" aria-label="언어 선택">
+              <option value="ko">🇰🇷 한국어</option>
+              <option value="en">🇺🇸 English</option>
+              <option value="ja">🇯🇵 日本語</option>
+              <option value="zh">🇨🇳 中文</option>
+            </select>
+          </div>
+          <!-- 홈 버튼 -->
+          <button
+            type="button"
+            class="home-button"
+            onclick="
+              location.href =
+                this.closest('.facilities-page').dataset.source === 'lobby'
+                  ? '/lobby'
+                  : '/greenhouse'
+            "
+            aria-label="메인으로 이동"
+            data-i18n-aria="greenhouseHome"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M3 10.5L12 3L21 10.5"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M5.5 9.5V20H18.5V9.5"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M9.5 20V14H14.5V20"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <div class="time" id="currentTime">-</div>
+        </div>
+      </header>
+
+      <main class="facility-main">
+        <section class="facility-intro">
+          <span class="eyebrow">FACILITY GUIDE</span>
+          <h1 id="facilityPageTitle">시설 안내</h1>
+          <p id="facilityPageDesc">안내받을 시설을 선택해 주세요.</p>
+        </section>
+
+        <section class="facility-grid" aria-label="시설 목록">
+          {% for item in facilities %}
+          <button
+            type="button"
+            class="facility-choice"
+            data-facility="{{ item.key }}"
+            data-name="{{ item.name }}"
+            data-description="{{ item.location_description }}"
+            data-x="{{ item.coord_x }}"
+            data-y="{{ item.coord_y }}"
+          >
+            <span class="facility-choice-icon" aria-hidden="true">
+              {% if item.key == 'toilet' %}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 48 48"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                width="100%"
+                height="100%"
+              >
+                <!-- 왼쪽 남성 캐릭터 -->
+                <circle cx="14" cy="11" r="3.5" />
+                <path
+                  d="M8.5 24.5v-4.5a3 3 0 0 1 3-3h5a3 3 0 0 1 3 3v4.5a1.5 1.5 0 0 1-1.5 1.5h-1v13.5M11.5 26v13.5"
+                />
+
+                <!-- 중앙 수직 구분선 -->
+                <line x1="24" y1="7" x2="24" y2="41" />
+
+                <!-- 오른쪽 여성 캐릭터 -->
+                <circle cx="34" cy="11" r="3.5" />
+                <path
+                  d="M34 17a3 3 0 0 0-3 3l-2.5 9a1.5 1.5 0 0 0 1.5 1.5h1.5v9M34 17a3 3 0 0 1 3 3l2.5 9A1.5 1.5 0 0 1 38 30.5h-1.5v9"
+                />
+              </svg>
+
+              {% elif item.key == 'cafe' %}
+              <svg
+                viewBox="0 0 48 48"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M11 18h22v14a8 8 0 0 1-8 8h-6a8 8 0 0 1-8-8V18Z" />
+                <path d="M33 22h4a4 4 0 0 1 4 4v1a4 4 0 0 1-4 4h-4" />
+                <path
+                  d="M16 11c0-2 2-3 2-5M24 11c0-2 2-3 2-5M32 11c0-2 2-3 2-5"
+                />
+              </svg>
+
+              {% elif item.key == 'convenience' %}
+              <svg
+                viewBox="0 0 48 48"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M13 17h22l-3 25H16l-3-25Z" />
+                <path d="M11 17h26v-3H11v3Z" />
+                <path d="M27 6L22 14" />
+              </svg>
+
+              {% elif item.key == 'infirmary' %}
+              <svg
+                viewBox="0 0 48 48"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="6" y="6" width="36" height="36" rx="6" />
+                <path d="M24 15v18M15 24h18" />
+              </svg>
+
+              {% elif item.key == 'nursing' %}
+              <svg
+                viewBox="0 0 48 48"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M16 20v18a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V20H16Z" />
+                <path d="M19 20c0-4 2-7 5-7s5 3 5 7" />
+                <path d="M22 13V6h4v7" />
+                <path d="M21 27h6M21 33h6" />
+              </svg>
+
+              {% elif item.key == 'education' %}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 80 80"
+                width="80"
+                height="80"
+              >
+                <g
+                  fill="none"
+                  stroke="#1A2536"
+                  stroke-width="5.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M 30,43 
+             C 30,29 50,29 50,43 
+             C 50,53 45,55 45,61 
+             L 35,61 
+             C 35,55 30,53 30,43 Z"
+                  />
+                  <path d="M 37,68 L 43,68" />
+                  <path d="M 40,21 L 40,25" />
+                  <path d="M 18,37 L 22,40" />
+                  <path d="M 62,37 L 58,40" />
+                </g>
+              </svg>
+
+              {% elif item.key in [ 'entrance', 'sub_entrance',
+              'special_entrance', 'mediterranean_top', 'mediterranean_bottom',
+              'tropical_top', 'tropical_bottom' ] %}
+              <svg
+                viewBox="0 0 48 48"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M34 42V8H14v34" />
+                <circle cx="28" cy="25" r="1" fill="currentColor" />
+              </svg>
+              {% endif %}
+            </span>
+
+            <strong class="facility-name-text" data-i18n="{{ item.key }}"
+              >{{ item.name }}</strong
+            >
+            <span class="facility-choice-arrow" aria-hidden="true">›</span>
+          </button>
+          {% endfor %}
+        </section>
+      </main>
+
+      <div
+        class="facility-modal"
+        id="facilityModal"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="facilityModalTitle"
+      >
+        <button
+          class="facility-modal-backdrop"
+          type="button"
+          data-close-facility
+          aria-label="닫기"
+        ></button>
+        <section class="facility-modal-panel">
+          <header class="facility-modal-header">
+            <div>
+              <span class="eyebrow">FACILITY LOCATION</span>
+              <h2 id="facilityModalTitle">시설 위치 안내</h2>
+              <p id="facilityMapHelp">
+                안내도에서 선택한 시설의 위치를 확인해 주세요.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="facility-modal-x"
+              data-close-facility
+              aria-label="닫기"
+            >
+              ×
+            </button>
+          </header>
+          <div class="facility-map-layout">
+            <div class="facility-map" id="facilityMap">
+              <img
+                src="{{ url_for('static', filename='images/maps/maps.png') }}"
+                alt="시설 안내도"
+                class="facility-map-image"
+              />
+              <div
+                class="facility-marker"
+                id="facilityMarker"
+                aria-label="선택한 시설 위치"
+              ></div>
+              <div class="map-entrance-label">ENTRANCE</div>
+            </div>
+            <aside class="facility-selected-panel">
+              <span class="selected-caption" data-i18n="selectedFacility"
+                >선택한 시설</span
+              >
+              <strong id="selectedFacilityName">화장실</strong>
+              <!-- DB의 location_description을 띄울 수 있는 공간 -->
+              <p
+                id="facilityDescText"
+                class="facility-desc-text"
+                style="font-size: 14px; color: #555; margin-top: 6px"
+              ></p>
+              <p
+                id="facilityRequestStatus"
+                class="facility-request-status"
+                aria-live="polite"
+              ></p>
+            </aside>
+          </div>
+          <footer class="facility-modal-actions">
+            <button
+              type="button"
+              class="facility-cancel"
+              id="cancelFacility"
+              data-i18n="cancel"
+            >
+              취소
+            </button>
+            <button
+              type="button"
+              class="facility-guide"
+              id="guideFacility"
+              data-i18n="guide"
+            >
+              안내하기
+            </button>
+          </footer>
+        </section>
+      </div>
+      <!-- 안내 시작 최종 확인 모달 -->
+      <div
+        class="guide-confirm-modal"
+        id="guideConfirmModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="guideConfirmTitle"
+        aria-hidden="true"
+      >
+        <div class="guide-confirm-panel">
+          <div class="guide-confirm-icon" aria-hidden="true">📍</div>
+
+          <h2 id="guideConfirmTitle">안내를 시작할까요?</h2>
+
+          <p>로봇이 선택하신 목적지까지 안내해 드립니다.</p>
+
+          <p class="guide-confirm-destination">
+            목적지:
+            <strong id="guideConfirmDestination">화장실</strong>
+          </p>
+
+          <div class="guide-confirm-actions">
+            <button type="button" id="cancelGuideConfirm">취소</button>
+
+            <button type="button" id="confirmGuideStart">안내 시작</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 안내 진행 중 전체 화면 모달 -->
+      <div
+        class="robot-moving-modal"
+        id="robotMovingModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="robotMovingTitle"
+        aria-hidden="true"
+      >
+        <div class="robot-moving-content">
+          <div class="robot-moving-icon" aria-hidden="true">➜</div>
+
+          <h2 id="robotMovingTitle">이동 중입니다!</h2>
+          <p id="robotMovingDescription">
+            선택하신 목적지까지 안내하고 있습니다.
+          </p>
+
+          <div class="robot-moving-dots" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <button type="button" id="cancelRobotMoving">안내 취소</button>
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/facilities.js') }}"></script>
+  </body>
+</html>

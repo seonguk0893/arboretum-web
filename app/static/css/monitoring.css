@@ -1,0 +1,1425 @@
+/* =========================================================
+
+   MONITORING (관제 모니터링 대시보드)
+
+   ---------------------------------------------------------
+
+   - 로봇 2대 상태 카드 + 이상 상황 알림 + 알림 이력
+
+   - 색: 정상 = 초록 / 주의 = 주황 / 이상 = 빨강 / 수신 대기 = 회색
+
+   ========================================================= */
+
+:root {
+  --alert: #d92d20;
+
+  --alert-dark: #b42318;
+
+  --alert-bg: #fef3f2;
+
+  --alert-line: #fda29b;
+
+  --warn: #b54708;
+
+  --warn-bg: #fffaeb;
+
+  --warn-line: #fec84b;
+
+  --ok: #168f68;
+
+  --ok-bg: #e8f6ef;
+
+  --wait: #6f7d75;
+
+  --wait-bg: #eef2ef;
+}
+
+/* =========================================================
+
+   01. PAGE
+
+   ========================================================= */
+
+.monitor-page {
+  width: 100%;
+
+  height: 100dvh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  background: #f7faf8;
+}
+
+.monitor-main {
+  flex: 1;
+
+  min-height: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: clamp(14px, 2vh, 26px);
+
+  padding: clamp(16px, 2.4vw, 40px) clamp(16px, 4vw, 70px) 40px;
+
+  /* 관제 화면은 정보가 많아서 이 안에서만 스크롤 */
+
+  overflow-y: auto;
+}
+
+/* =========================================================
+
+   02. HEADER
+
+   ========================================================= */
+.app-header {
+  display: none !important;
+}
+
+.monitor-chip {
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  background: #fff3cd;
+
+  color: #7a5b00;
+
+  font-size: clamp(12px, 1.2vw, 16px);
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.feed-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  background: var(--wait-bg);
+
+  color: var(--wait);
+
+  font-size: clamp(12px, 1.2vw, 16px);
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.feed-dot {
+  width: 9px;
+
+  height: 9px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+.feed-status.live {
+  background: var(--ok-bg);
+
+  color: var(--ok);
+}
+
+.feed-status.live .feed-dot {
+  animation: feedBlink 1.6s ease-in-out infinite;
+}
+
+.feed-status.lost {
+  background: var(--alert);
+
+  color: #ffffff;
+}
+
+@keyframes feedBlink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* =========================================================
+
+   03. TITLE + SUMMARY
+
+   ========================================================= */
+
+.monitor-title {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  flex-wrap: wrap;
+
+  gap: 16px;
+
+  flex-shrink: 0;
+}
+
+.monitor-label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: var(--green);
+
+  font-size: clamp(10px, 1vw, 14px);
+
+  font-weight: 800;
+
+  letter-spacing: 0.2em;
+}
+
+.monitor-title h1 {
+  color: #1f3a2c;
+
+  font-size: clamp(26px, 3vw, 44px);
+
+  font-weight: 800;
+
+  letter-spacing: -0.05em;
+
+  line-height: 1.15;
+}
+
+.summary {
+  display: flex;
+
+  gap: clamp(8px, 1vw, 14px);
+}
+
+.summary-item {
+  min-width: clamp(70px, 8vw, 110px);
+
+  padding: 10px clamp(12px, 1.4vw, 20px);
+
+  border: 1px solid var(--line);
+
+  border-radius: var(--radius-md);
+
+  background: #ffffff;
+
+  text-align: center;
+}
+
+.summary-item span {
+  display: block;
+
+  color: var(--sub-text);
+
+  font-size: clamp(12px, 1.1vw, 15px);
+
+  font-weight: 700;
+}
+
+.summary-item strong {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #1f3a2c;
+
+  font-size: clamp(22px, 2.4vw, 34px);
+
+  font-weight: 800;
+
+  line-height: 1.1;
+}
+
+.summary-item.ok strong {
+  color: var(--ok);
+}
+
+.summary-item.warning strong {
+  color: var(--warn);
+}
+
+.summary-item.critical strong {
+  color: var(--alert);
+}
+
+.summary-item.critical.active {
+  border-color: var(--alert);
+
+  background: var(--alert-bg);
+}
+
+.summary-item.warning.active {
+  border-color: var(--warn-line);
+
+  background: var(--warn-bg);
+}
+
+/* =========================================================
+
+   04. ALERT BANNER (이상 상황 알림)
+
+   ========================================================= */
+
+.alert-banner {
+  flex-shrink: 0;
+
+  padding: clamp(14px, 2vh, 24px) clamp(16px, 2vw, 32px);
+
+  border-radius: var(--radius-lg);
+
+  background: var(--alert);
+
+  color: #ffffff;
+
+  box-shadow: 0 0 0 4px rgba(217, 45, 32, 0.25);
+
+  animation: bannerGlow 1.4s ease-in-out infinite;
+}
+
+.alert-banner[hidden] {
+  display: none;
+}
+
+.alert-banner.warning {
+  background: #f79009;
+
+  color: #3d2300;
+
+  box-shadow: 0 0 0 4px rgba(247, 144, 9, 0.25);
+
+  animation: none;
+}
+
+@keyframes bannerGlow {
+  50% {
+    box-shadow: 0 0 0 10px rgba(217, 45, 32, 0.12);
+  }
+}
+
+.alert-banner-head {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+}
+
+.alert-banner-head strong {
+  font-size: clamp(20px, 2.4vw, 34px);
+
+  font-weight: 800;
+
+  letter-spacing: -0.03em;
+
+  line-height: 1.2;
+}
+
+.alert-banner-icon {
+  width: clamp(30px, 3vw, 44px);
+
+  height: clamp(30px, 3vw, 44px);
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: var(--alert);
+
+  font-size: clamp(20px, 2.2vw, 30px);
+
+  font-weight: 900;
+}
+
+.alert-banner.warning .alert-banner-icon {
+  color: #b54708;
+}
+
+.alert-banner ul {
+  margin-top: 12px;
+
+  display: grid;
+
+  gap: 6px;
+
+  list-style: none;
+}
+
+.alert-banner li {
+  padding: 8px 14px;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  font-size: clamp(15px, 1.5vw, 22px);
+
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+.alert-banner.warning li {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.alert-banner li b {
+  margin-right: 8px;
+
+  font-weight: 900;
+}
+
+/* =========================================================
+
+   05. ROBOT CARDS
+
+   ========================================================= */
+
+.robot-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+
+  gap: clamp(14px, 1.8vw, 28px);
+
+  flex-shrink: 0;
+}
+
+.robot-card {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: clamp(14px, 2vh, 22px);
+
+  padding: clamp(18px, 2vw, 32px);
+
+  border: 2px solid var(--line);
+
+  border-radius: var(--radius-lg);
+
+  background: #ffffff;
+
+  box-shadow: var(--shadow-card);
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.robot-card.level-warning {
+  border-color: var(--warn-line);
+}
+
+.robot-card.level-critical {
+  border: 3px solid var(--alert);
+
+  box-shadow:
+    0 0 0 6px rgba(217, 45, 32, 0.14),
+    var(--shadow-card);
+}
+
+.robot-card.level-waiting {
+  background: #fbfcfb;
+}
+
+/* ---------- 카드 머리 ---------- */
+
+.robot-card-head {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.robot-role {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: var(--green);
+
+  font-size: clamp(12px, 1.1vw, 15px);
+
+  font-weight: 800;
+}
+
+.robot-title h2 {
+  color: #1f3a2c;
+
+  font-size: clamp(24px, 2.6vw, 38px);
+
+  font-weight: 800;
+
+  letter-spacing: -0.04em;
+
+  line-height: 1.15;
+}
+
+.robot-title p {
+  margin-top: 4px;
+
+  color: var(--sub-text);
+
+  font-size: clamp(12px, 1.1vw, 16px);
+}
+
+.robot-badges {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 6px;
+
+  flex-shrink: 0;
+}
+
+.level-chip,
+.connection-chip {
+  padding: 6px 14px;
+
+  border-radius: 999px;
+
+  font-size: clamp(13px, 1.2vw, 17px);
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.connection-chip {
+  background: var(--wait-bg);
+
+  color: var(--wait);
+
+  font-size: clamp(12px, 1vw, 14px);
+}
+
+.level-ok .level-chip {
+  background: var(--ok-bg);
+
+  color: var(--ok);
+}
+
+.level-warning .level-chip {
+  background: var(--warn-bg);
+
+  color: var(--warn);
+}
+
+.level-critical .level-chip {
+  background: var(--alert);
+
+  color: #ffffff;
+}
+
+.level-waiting .level-chip {
+  background: var(--wait-bg);
+
+  color: var(--wait);
+}
+
+.connection-chip.connected {
+  background: var(--ok-bg);
+
+  color: var(--ok);
+}
+
+.connection-chip.disconnected {
+  background: var(--alert-bg);
+
+  color: var(--alert-dark);
+}
+
+/* ---------- 이 로봇의 이상 상황 (빨간 문구) ---------- */
+
+.robot-alerts {
+  display: grid;
+
+  gap: 8px;
+
+  list-style: none;
+}
+
+.robot-alerts[hidden] {
+  display: none;
+}
+
+.robot-alerts li {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  padding: 12px 16px;
+
+  border: 1.5px solid var(--alert-line);
+
+  border-radius: var(--radius-sm);
+
+  background: var(--alert-bg);
+
+  color: var(--alert-dark);
+
+  font-size: clamp(15px, 1.5vw, 21px);
+
+  font-weight: 800;
+
+  line-height: 1.35;
+}
+
+.robot-alerts li::before {
+  content: "⚠";
+
+  flex-shrink: 0;
+}
+
+.robot-alerts li.warning {
+  border-color: var(--warn-line);
+
+  background: var(--warn-bg);
+
+  color: var(--warn);
+}
+
+.robot-card.level-critical .robot-alerts li.critical {
+  animation: alertFlash 1.4s ease-in-out infinite;
+}
+
+@keyframes alertFlash {
+  50% {
+    background: #ffe1de;
+  }
+}
+
+/* ---------- 배터리 ---------- */
+
+.battery {
+  padding: clamp(12px, 1.6vh, 18px) clamp(14px, 1.6vw, 22px);
+
+  border-radius: var(--radius-md);
+
+  background: #f6f9f7;
+}
+
+.battery-top {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+}
+
+.metric-label {
+  color: var(--sub-text);
+
+  font-size: clamp(13px, 1.2vw, 17px);
+
+  font-weight: 700;
+}
+
+.battery-charging {
+  color: var(--ok);
+
+  font-size: clamp(13px, 1.2vw, 17px);
+
+  font-weight: 800;
+}
+
+.battery-value {
+  margin: 4px 0 10px;
+
+  display: flex;
+
+  align-items: baseline;
+
+  gap: 4px;
+
+  color: #1f3a2c;
+}
+
+.battery-value strong {
+  font-size: clamp(34px, 4vw, 58px);
+
+  font-weight: 800;
+
+  line-height: 1;
+}
+
+.battery-value span {
+  font-size: clamp(16px, 1.6vw, 24px);
+
+  font-weight: 700;
+}
+
+.battery-bar {
+  height: clamp(10px, 1.2vh, 14px);
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #dfe8e2;
+}
+
+.battery-bar i {
+  display: block;
+
+  width: 0;
+
+  height: 100%;
+
+  border-radius: 999px;
+
+  background: var(--ok);
+
+  transition:
+    width 0.5s ease,
+    background 0.3s ease;
+}
+
+.battery.low .battery-bar i {
+  background: #f79009;
+}
+
+.battery.critical .battery-bar i {
+  background: var(--alert);
+}
+
+.battery.low .battery-value,
+.battery.critical .battery-value {
+  color: var(--warn);
+}
+
+.battery.critical .battery-value {
+  color: var(--alert);
+}
+
+/* ---------- 상태 정보 ---------- */
+
+.metrics {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: clamp(10px, 1.4vh, 16px) clamp(14px, 1.6vw, 24px);
+}
+
+.metrics > div {
+  min-width: 0;
+}
+
+.metrics > div[hidden] {
+  display: none;
+}
+
+.metrics dt {
+  margin-bottom: 3px;
+
+  color: var(--sub-text);
+
+  font-size: clamp(12px, 1.1vw, 15px);
+
+  font-weight: 700;
+}
+
+.metrics dd {
+  color: #1f3a2c;
+
+  font-size: clamp(16px, 1.6vw, 23px);
+
+  font-weight: 800;
+
+  letter-spacing: -0.02em;
+
+  line-height: 1.3;
+
+  overflow-wrap: anywhere;
+}
+
+.metrics dd.is-error {
+  color: var(--alert);
+}
+
+.robot-card-foot {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding-top: 12px;
+
+  border-top: 1px solid var(--line);
+
+  color: var(--sub-text);
+
+  font-size: clamp(12px, 1.1vw, 15px);
+}
+
+.robot-card-foot strong {
+  color: #3f594b;
+
+  font-weight: 700;
+}
+
+.robot-card-foot strong.is-stale {
+  color: var(--alert);
+
+  font-weight: 800;
+}
+
+/* =========================================================
+
+   06. HISTORY (알림 이력)
+
+   ========================================================= */
+
+.history {
+  flex-shrink: 0;
+
+  padding: clamp(16px, 1.8vw, 28px);
+
+  border: 1px solid var(--line);
+
+  border-radius: var(--radius-lg);
+
+  background: #ffffff;
+}
+
+.history-head {
+  display: flex;
+
+  align-items: baseline;
+
+  justify-content: space-between;
+
+  margin-bottom: 12px;
+}
+
+.history-head h2 {
+  color: #1f3a2c;
+
+  font-size: clamp(18px, 1.8vw, 26px);
+
+  font-weight: 800;
+
+  letter-spacing: -0.03em;
+}
+
+.history-head span {
+  color: var(--sub-text);
+
+  font-size: clamp(13px, 1.2vw, 16px);
+
+  font-weight: 700;
+}
+
+.history-scroll {
+  max-height: 320px;
+
+  overflow: auto;
+}
+
+.history table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  font-size: clamp(13px, 1.2vw, 17px);
+}
+
+.history th {
+  position: sticky;
+
+  top: 0;
+
+  padding: 10px 12px;
+
+  border-bottom: 2px solid var(--line);
+
+  background: #ffffff;
+
+  color: var(--sub-text);
+
+  font-weight: 700;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+.history td {
+  padding: 10px 12px;
+
+  border-bottom: 1px solid #eef2ef;
+
+  color: #26342d;
+
+  vertical-align: top;
+}
+
+.history td.level {
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.history td.level.critical {
+  color: var(--alert);
+}
+
+.history td.level.warning {
+  color: var(--warn);
+}
+
+.history tr.active td {
+  background: var(--alert-bg);
+}
+
+.history tr.active.warning td {
+  background: var(--warn-bg);
+}
+
+.history td.state {
+  white-space: nowrap;
+}
+
+.history td.state.active {
+  color: var(--alert-dark);
+
+  font-weight: 800;
+}
+
+.empty-message {
+  padding: 22px 0;
+
+  color: var(--muted-text);
+
+  font-size: clamp(14px, 1.3vw, 18px);
+
+  text-align: center;
+}
+
+.empty-message[hidden] {
+  display: none;
+}
+
+/* =========================================================
+
+   07. DEMO PANEL
+
+   ========================================================= */
+
+.demo-panel {
+  flex-shrink: 0;
+
+  padding: clamp(16px, 1.8vw, 26px);
+
+  border: 2px dashed #e0c36a;
+
+  border-radius: var(--radius-lg);
+
+  background: #fffdf3;
+}
+
+.demo-panel[hidden] {
+  display: none;
+}
+
+.demo-panel-head {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: baseline;
+
+  gap: 6px 14px;
+
+  margin-bottom: 14px;
+}
+
+.demo-panel-head strong {
+  color: #7a5b00;
+
+  font-size: clamp(16px, 1.5vw, 21px);
+
+  font-weight: 800;
+}
+
+.demo-panel-head span {
+  color: #8a7a46;
+
+  font-size: clamp(12px, 1.1vw, 15px);
+}
+
+.demo-columns {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+  gap: 16px;
+}
+
+.demo-column h3 {
+  margin-bottom: 8px;
+
+  color: #3f594b;
+
+  font-size: clamp(14px, 1.3vw, 18px);
+
+  font-weight: 800;
+}
+
+.demo-buttons {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+.demo-buttons button {
+  min-height: 40px;
+
+  padding: 0 14px;
+
+  border: 1px solid #e0d6a8;
+
+  border-radius: 999px;
+
+  background: #ffffff;
+
+  color: #5a4d1e;
+
+  font-size: clamp(13px, 1.1vw, 15px);
+
+  font-weight: 700;
+}
+
+.demo-buttons button[aria-pressed="true"] {
+  border-color: var(--alert);
+
+  background: var(--alert);
+
+  color: #ffffff;
+}
+
+.demo-reset {
+  margin-top: 14px;
+
+  min-height: 42px;
+
+  padding: 0 20px;
+
+  border-radius: 999px;
+
+  background: #3f594b;
+
+  color: #ffffff;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+  08. RESPONSIVE LAYOUT
+  - Landscape desktop: robot cards side by side
+  - 1080 x 1920 portrait display: robot cards stacked vertically
+  - Mobile: compact single-column layout
+  ========================================================= */
+
+/* Prevent flex/grid children from forcing horizontal overflow. */
+.monitor-page,
+.monitor-main,
+.robot-grid,
+.robot-card {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.monitor-page {
+  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.monitor-main {
+  width: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Desktop and landscape displays */
+.robot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: clamp(14px, 1.8vw, 28px);
+  width: 100%;
+}
+
+.robot-card {
+  min-width: 0;
+  height: 100%;
+}
+
+/* Wide but not very tall screens: preserve access to all content. */
+@media (max-height: 900px) and (orientation: landscape) {
+  .monitor-main {
+    gap: 14px;
+    padding: 20px clamp(20px, 3vw, 48px) 24px;
+  }
+
+  .robot-card {
+    padding: clamp(16px, 1.6vw, 24px);
+    gap: 14px;
+  }
+
+  .history-scroll {
+    max-height: 220px;
+  }
+}
+
+/* Portrait displays, including the 1080 x 1920 kiosk/monitor.
+   Use the full width and put each robot card on its own row. */
+@media (orientation: portrait) and (min-width: 700px) {
+  .monitor-main {
+    gap: clamp(18px, 1.7vh, 30px);
+    padding: clamp(24px, 2.4vh, 44px) clamp(28px, 3.4vw, 54px)
+      clamp(28px, 2.4vh, 44px);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .monitor-title {
+    align-items: flex-start;
+    gap: clamp(16px, 1.8vh, 28px);
+  }
+
+  .monitor-title h1 {
+    font-size: clamp(34px, 3.4vw, 48px);
+  }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: 100%;
+    gap: 12px;
+  }
+
+  .summary-item {
+    min-width: 0;
+    padding: 14px 12px;
+  }
+
+  .summary-item span {
+    font-size: clamp(15px, 1.35vw, 19px);
+  }
+
+  .summary-item strong {
+    font-size: clamp(28px, 2.8vw, 38px);
+  }
+
+  .robot-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-flow: row;
+    grid-auto-rows: auto;
+    gap: clamp(20px, 2vh, 32px);
+    width: 100%;
+  }
+
+  .robot-card {
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    padding: clamp(24px, 2.8vw, 38px);
+    gap: clamp(18px, 1.8vh, 28px);
+  }
+
+  .robot-title h2 {
+    font-size: clamp(30px, 3vw, 42px);
+  }
+
+  .robot-title p,
+  .robot-role {
+    font-size: clamp(16px, 1.45vw, 20px);
+  }
+
+  .level-chip,
+  .connection-chip {
+    font-size: clamp(15px, 1.35vw, 19px);
+    padding: 8px 14px;
+  }
+
+  .battery {
+    padding: clamp(18px, 1.8vh, 28px) clamp(20px, 2vw, 30px);
+  }
+
+  .metric-label,
+  .battery-charging {
+    font-size: clamp(16px, 1.4vw, 20px);
+  }
+
+  .battery-value strong {
+    font-size: clamp(42px, 4vw, 58px);
+  }
+
+  .battery-value span {
+    font-size: clamp(19px, 1.8vw, 26px);
+  }
+
+  .battery-bar {
+    height: 14px;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 1.7vh, 26px) clamp(18px, 2vw, 30px);
+  }
+
+  .metrics dt {
+    font-size: clamp(15px, 1.3vw, 19px);
+  }
+
+  .metrics dd {
+    font-size: clamp(19px, 1.8vw, 26px);
+  }
+
+  .robot-alerts li {
+    padding: 14px 18px;
+    font-size: clamp(16px, 1.45vw, 21px);
+  }
+
+  .robot-card-foot {
+    font-size: clamp(14px, 1.2vw, 18px);
+  }
+
+  .alert-banner-head strong {
+    font-size: clamp(24px, 2.4vw, 34px);
+  }
+
+  .alert-banner li {
+    font-size: clamp(17px, 1.55vw, 22px);
+  }
+
+  .history {
+    padding: clamp(18px, 2vw, 28px);
+  }
+
+  .history-scroll {
+    max-height: 280px;
+  }
+}
+
+/* Exact target class of viewport: 1080 x 1920 portrait display.
+   Keep the two robot cards stacked, and use moderate sizing so the
+   page remains readable without excessively oversized components. */
+@media (orientation: portrait) and (min-width: 1000px) and (min-height: 1700px) {
+  .monitor-main {
+    gap: 24px;
+    padding: 34px 38px 38px;
+  }
+
+  .monitor-title {
+    gap: 20px;
+  }
+
+  .monitor-title h1 {
+    font-size: 42px;
+  }
+
+  .summary-item {
+    padding: 15px 12px;
+  }
+
+  .robot-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .robot-card {
+    padding: 30px 32px;
+    gap: 22px;
+  }
+
+  .robot-title h2 {
+    font-size: 38px;
+  }
+
+  .robot-title p,
+  .robot-role {
+    font-size: 18px;
+  }
+
+  .battery {
+    padding: 22px 24px;
+  }
+
+  .metrics {
+    gap: 20px 26px;
+  }
+
+  .history-scroll {
+    max-height: 300px;
+  }
+}
+
+/* Mobile / narrow portrait screens */
+@media (max-width: 699px) {
+  .monitor-page {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  .monitor-main {
+    gap: 16px;
+    padding: 16px 14px 24px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .monitor-title {
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .monitor-title h1 {
+    font-size: clamp(25px, 7vw, 34px);
+  }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 7px;
+  }
+
+  .summary-item {
+    min-width: 0;
+    padding: 10px 6px;
+  }
+
+  .summary-item span {
+    font-size: 11px;
+  }
+
+  .summary-item strong {
+    font-size: clamp(20px, 5.5vw, 28px);
+  }
+
+  .robot-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .robot-card {
+    padding: 18px 16px;
+    gap: 16px;
+  }
+
+  .robot-card-head {
+    gap: 8px;
+  }
+
+  .robot-title h2 {
+    font-size: clamp(22px, 6vw, 30px);
+  }
+
+  .robot-badges {
+    gap: 5px;
+  }
+
+  .level-chip,
+  .connection-chip {
+    padding: 6px 9px;
+    font-size: 11px;
+  }
+
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .history {
+    padding: 14px;
+  }
+
+  .history-scroll {
+    max-height: 240px;
+    overflow: auto;
+  }
+
+  .history table {
+    min-width: 480px;
+  }
+
+  .history th:nth-child(1),
+  .history td:nth-child(1) {
+    display: none;
+  }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .alert-banner,
+  .feed-status.live .feed-dot,
+  .robot-card.level-critical .robot-alerts li.critical {
+    animation: none;
+  }
+
+  .robot-card,
+  .battery-bar i {
+    transition: none;
+  }
+}
+
+/* FINAL OVERRIDE: force vertical stacking on tall portrait kiosk displays.
+   Keep this block at the very end of the stylesheet. */
+@media screen and (min-width: 1000px) and (min-height: 1700px) {
+  .monitor-page .monitor-main .robot-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    grid-auto-flow: row !important;
+    grid-auto-columns: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .monitor-page .monitor-main .robot-grid > .robot-card {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+  }
+}
