@@ -462,7 +462,7 @@ def upload_photo_for_qr():
         )
 
     else:
-        base_url = "http://192.168.35.157:5000"
+        base_url = "http://192.168.35.65:5000"
 
         download_url = (
             f"{base_url.rstrip('/')}"
